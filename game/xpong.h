@@ -10,7 +10,4 @@
 #define XPONG_H_
 
 
-
-
-
 #endif /* XPONG_H_ */

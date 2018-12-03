@@ -72,6 +72,7 @@ extern uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 
 void glcd_init();
 void glcd_clear();
+void glcd_clear_all();
 
 void glcd_enable_mirroring_controllers();
 void glcd_enable_controller(uint8_t controller);
@@ -83,10 +84,13 @@ void glcd_set_cursor(uint8_t x, uint8_t y);
 void glcd_set_pixel(uint8_t x, uint8_t y);
 
 void glcd_draw_single_screen(char* graphic, uint8_t controller);
-void glcd_draw(char* const graphic);
 
 void clear_screen_data();
 
 void redraw_screen_data();
+
+void glcd_set_y(uint8_t y);
+void glcd_set_x(uint8_t x);
+
 
 #endif /* GLCD_H_ */
