@@ -120,6 +120,16 @@ uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 
 	glcd_write_data(page_state);
  }
+
+ void glcd_clear_pixel(uint8_t x, uint8_t y)
+ {
+	uint8_t pixel = y%BITS_IN_BYTE;
+	glcd_set_cursor(x,y);
+
+	uint8_t page_state = screen_data[glcd_y*(1+enabled_controller)][glcd_x] & ~(1 << pixel);
+
+	glcd_write_data(page_state);
+ }
  
 
 void glcd_draw_single_screen(char* const graphic, uint8_t controller)

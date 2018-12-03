@@ -61,9 +61,9 @@ extern uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 ///		TIMIMING CONFIGURATION
 //////////////////////////////////////////////////////////////////////////
 
-#define E_RISE_TIME 25
-#define E_FALL_TIME 25
-#define DATA_WRITE_TIME 10
+#define E_RISE_TIME 5
+#define E_FALL_TIME 5
+#define DATA_WRITE_TIME 5
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -82,6 +82,7 @@ void glcd_write_data(uint8_t byte);
 
 void glcd_set_cursor(uint8_t x, uint8_t y);
 void glcd_set_pixel(uint8_t x, uint8_t y);
+void glcd_clear_pixel(uint8_t x, uint8_t y);
 
 void glcd_draw_single_screen(char* graphic, uint8_t controller);
 
