@@ -3,31 +3,31 @@ XPong.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000003ba  00000000  00000000  00000094  2**1
+  0 .text         0000042e  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000200  00800060  000003ba  0000044e  2**0
+  1 .data         00000200  00800060  0000042e  000004c2  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000403  00800260  00800260  0000064e  2**0
+  2 .bss          00000403  00800260  00800260  000006c2  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  0000064e  2**0
+  3 .comment      00000030  00000000  00000000  000006c2  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000680  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000006f4  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000a8  00000000  00000000  000006bc  2**0
+  5 .debug_aranges 000000a8  00000000  00000000  00000730  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000f5a  00000000  00000000  00000764  2**0
+  6 .debug_info   00000fac  00000000  00000000  000007d8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000824  00000000  00000000  000016be  2**0
+  7 .debug_abbrev 00000835  00000000  00000000  00001784  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000006c9  00000000  00000000  00001ee2  2**0
+  8 .debug_line   00000705  00000000  00000000  00001fb9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000017c  00000000  00000000  000025ac  2**2
+  9 .debug_frame  00000198  00000000  00000000  000026c0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000004c5  00000000  00000000  00002728  2**0
+ 10 .debug_str    000004e4  00000000  00000000  00002858  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000087b  00000000  00000000  00002bed  2**0
+ 11 .debug_loc    00000a24  00000000  00000000  00002d3c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000088  00000000  00000000  00003468  2**0
+ 12 .debug_ranges 00000088  00000000  00000000  00003760  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -67,8 +67,8 @@ Disassembly of section .text:
   60:	12 e0       	ldi	r17, 0x02	; 2
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	ea eb       	ldi	r30, 0xBA	; 186
-  68:	f3 e0       	ldi	r31, 0x03	; 3
+  66:	ee e2       	ldi	r30, 0x2E	; 46
+  68:	f4 e0       	ldi	r31, 0x04	; 4
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
   6e:	0d 92       	st	X+, r0
@@ -89,8 +89,8 @@ Disassembly of section .text:
   80:	a3 36       	cpi	r26, 0x63	; 99
   82:	b2 07       	cpc	r27, r18
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
-  86:	0e 94 a6 01 	call	0x34c	; 0x34c <main>
-  8a:	0c 94 db 01 	jmp	0x3b6	; 0x3b6 <_exit>
+  86:	0e 94 d8 01 	call	0x3b0	; 0x3b0 <main>
+  8a:	0c 94 15 02 	jmp	0x42a	; 0x42a <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -564,213 +564,291 @@ void glcd_draw_single_screen(char* const graphic, uint8_t controller)
  2b8:	ff 90       	pop	r15
  2ba:	08 95       	ret
 
-000002bc <draw_square>:
+000002bc <draw_rectangle>:
 
     }
 }
 
-void draw_square()
+void draw_rectangle(uint8_t left_upper_corner_x, uint8_t left_upper_corner_y, uint8_t width, uint8_t height)
 {
- 2bc:	cf 93       	push	r28
- 2be:	df 93       	push	r29
- 2c0:	ce e1       	ldi	r28, 0x1E	; 30
+ 2bc:	cf 92       	push	r12
+ 2be:	df 92       	push	r13
+ 2c0:	ef 92       	push	r14
+ 2c2:	ff 92       	push	r15
+ 2c4:	0f 93       	push	r16
+ 2c6:	1f 93       	push	r17
+ 2c8:	cf 93       	push	r28
+ 2ca:	df 93       	push	r29
+ 2cc:	e8 2e       	mov	r14, r24
+ 2ce:	f6 2e       	mov	r15, r22
+ 2d0:	c2 2f       	mov	r28, r18
+	uint8_t x = left_upper_corner_x;
+	uint8_t y = left_upper_corner_y;
 
-	uint8_t x = square_start;
-
-	for(; x < square_start + square_size; x++)
+	for(; x < left_upper_corner_x + width; x++)
+ 2d2:	90 e0       	ldi	r25, 0x00	; 0
+ 2d4:	8c 01       	movw	r16, r24
+ 2d6:	04 0f       	add	r16, r20
+ 2d8:	11 1d       	adc	r17, r1
+ 2da:	80 17       	cp	r24, r16
+ 2dc:	91 07       	cpc	r25, r17
+ 2de:	ac f4       	brge	.+42     	; 0x30a <draw_rectangle+0x4e>
+ 2e0:	d8 2f       	mov	r29, r24
 	{
 		glcd_set_pixel(x,y);
- 2c2:	6e e1       	ldi	r22, 0x1E	; 30
- 2c4:	8c 2f       	mov	r24, r28
- 2c6:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
+ 2e2:	6f 2d       	mov	r22, r15
+ 2e4:	8d 2f       	mov	r24, r29
+ 2e6:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 2ca:	2f ef       	ldi	r18, 0xFF	; 255
- 2cc:	80 e7       	ldi	r24, 0x70	; 112
- 2ce:	92 e0       	ldi	r25, 0x02	; 2
- 2d0:	21 50       	subi	r18, 0x01	; 1
- 2d2:	80 40       	sbci	r24, 0x00	; 0
- 2d4:	90 40       	sbci	r25, 0x00	; 0
- 2d6:	e1 f7       	brne	.-8      	; 0x2d0 <draw_square+0x14>
- 2d8:	00 c0       	rjmp	.+0      	; 0x2da <draw_square+0x1e>
- 2da:	00 00       	nop
+ 2ea:	2f ef       	ldi	r18, 0xFF	; 255
+ 2ec:	80 e7       	ldi	r24, 0x70	; 112
+ 2ee:	92 e0       	ldi	r25, 0x02	; 2
+ 2f0:	21 50       	subi	r18, 0x01	; 1
+ 2f2:	80 40       	sbci	r24, 0x00	; 0
+ 2f4:	90 40       	sbci	r25, 0x00	; 0
+ 2f6:	e1 f7       	brne	.-8      	; 0x2f0 <draw_rectangle+0x34>
+ 2f8:	00 c0       	rjmp	.+0      	; 0x2fa <draw_rectangle+0x3e>
+ 2fa:	00 00       	nop
+void draw_rectangle(uint8_t left_upper_corner_x, uint8_t left_upper_corner_y, uint8_t width, uint8_t height)
+{
+	uint8_t x = left_upper_corner_x;
+	uint8_t y = left_upper_corner_y;
 
-	uint8_t y = square_start;
-
-	uint8_t x = square_start;
-
-	for(; x < square_start + square_size; x++)
- 2dc:	cf 5f       	subi	r28, 0xFF	; 255
- 2de:	cc 33       	cpi	r28, 0x3C	; 60
- 2e0:	81 f7       	brne	.-32     	; 0x2c2 <draw_square+0x6>
- 2e2:	ce e1       	ldi	r28, 0x1E	; 30
-		_delay_ms(DELAY);
-	}
-
-	for(; y < square_start + square_size; y++)
-	{
-		glcd_set_pixel(x,y);
- 2e4:	6c 2f       	mov	r22, r28
- 2e6:	8c e3       	ldi	r24, 0x3C	; 60
- 2e8:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
- 2ec:	2f ef       	ldi	r18, 0xFF	; 255
- 2ee:	80 e7       	ldi	r24, 0x70	; 112
- 2f0:	92 e0       	ldi	r25, 0x02	; 2
- 2f2:	21 50       	subi	r18, 0x01	; 1
- 2f4:	80 40       	sbci	r24, 0x00	; 0
- 2f6:	90 40       	sbci	r25, 0x00	; 0
- 2f8:	e1 f7       	brne	.-8      	; 0x2f2 <draw_square+0x36>
- 2fa:	00 c0       	rjmp	.+0      	; 0x2fc <draw_square+0x40>
- 2fc:	00 00       	nop
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
-
-	for(; y < square_start + square_size; y++)
- 2fe:	cf 5f       	subi	r28, 0xFF	; 255
- 300:	cc 33       	cpi	r28, 0x3C	; 60
- 302:	81 f7       	brne	.-32     	; 0x2e4 <draw_square+0x28>
- 304:	dc 2f       	mov	r29, r28
-		_delay_ms(DELAY);
-	}
-
-	for(; x > square_start; x--)
-	{
-		glcd_set_pixel(x,y);
- 306:	6c e3       	ldi	r22, 0x3C	; 60
- 308:	8d 2f       	mov	r24, r29
- 30a:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
- 30e:	2f ef       	ldi	r18, 0xFF	; 255
- 310:	80 e7       	ldi	r24, 0x70	; 112
- 312:	92 e0       	ldi	r25, 0x02	; 2
- 314:	21 50       	subi	r18, 0x01	; 1
- 316:	80 40       	sbci	r24, 0x00	; 0
- 318:	90 40       	sbci	r25, 0x00	; 0
- 31a:	e1 f7       	brne	.-8      	; 0x314 <draw_square+0x58>
- 31c:	00 c0       	rjmp	.+0      	; 0x31e <draw_square+0x62>
- 31e:	00 00       	nop
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
-
-	for(; x > square_start; x--)
- 320:	d1 50       	subi	r29, 0x01	; 1
- 322:	de 31       	cpi	r29, 0x1E	; 30
- 324:	81 f7       	brne	.-32     	; 0x306 <draw_square+0x4a>
-		_delay_ms(DELAY);
-	}
-
-	for(; y > square_start; y--)
-	{
-		glcd_set_pixel(x,y);
- 326:	6c 2f       	mov	r22, r28
- 328:	8e e1       	ldi	r24, 0x1E	; 30
- 32a:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
- 32e:	2f ef       	ldi	r18, 0xFF	; 255
- 330:	80 e7       	ldi	r24, 0x70	; 112
- 332:	92 e0       	ldi	r25, 0x02	; 2
- 334:	21 50       	subi	r18, 0x01	; 1
- 336:	80 40       	sbci	r24, 0x00	; 0
- 338:	90 40       	sbci	r25, 0x00	; 0
- 33a:	e1 f7       	brne	.-8      	; 0x334 <draw_square+0x78>
- 33c:	00 c0       	rjmp	.+0      	; 0x33e <draw_square+0x82>
- 33e:	00 00       	nop
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
-
-	for(; y > square_start; y--)
- 340:	c1 50       	subi	r28, 0x01	; 1
- 342:	ce 31       	cpi	r28, 0x1E	; 30
- 344:	81 f7       	brne	.-32     	; 0x326 <draw_square+0x6a>
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
+	for(; x < left_upper_corner_x + width; x++)
+ 2fc:	df 5f       	subi	r29, 0xFF	; 255
+ 2fe:	8d 2f       	mov	r24, r29
+ 300:	90 e0       	ldi	r25, 0x00	; 0
+ 302:	80 17       	cp	r24, r16
+ 304:	91 07       	cpc	r25, r17
+ 306:	6c f3       	brlt	.-38     	; 0x2e2 <draw_rectangle+0x26>
+ 308:	01 c0       	rjmp	.+2      	; 0x30c <draw_rectangle+0x50>
+    }
 }
- 346:	df 91       	pop	r29
- 348:	cf 91       	pop	r28
- 34a:	08 95       	ret
 
-0000034c <main>:
+void draw_rectangle(uint8_t left_upper_corner_x, uint8_t left_upper_corner_y, uint8_t width, uint8_t height)
+{
+	uint8_t x = left_upper_corner_x;
+ 30a:	d8 2f       	mov	r29, r24
+
+	for(; x < left_upper_corner_x + width; x++)
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	} x--;
+ 30c:	0f ef       	ldi	r16, 0xFF	; 255
+ 30e:	0d 0f       	add	r16, r29
+
+	for(; y < left_upper_corner_y + height; y++)
+ 310:	8f 2d       	mov	r24, r15
+ 312:	90 e0       	ldi	r25, 0x00	; 0
+ 314:	6c 01       	movw	r12, r24
+ 316:	cc 0e       	add	r12, r28
+ 318:	d1 1c       	adc	r13, r1
+ 31a:	8c 15       	cp	r24, r12
+ 31c:	9d 05       	cpc	r25, r13
+ 31e:	ac f4       	brge	.+42     	; 0x34a <draw_rectangle+0x8e>
+ 320:	cf 2d       	mov	r28, r15
+	{
+		glcd_set_pixel(x,y);
+ 322:	6c 2f       	mov	r22, r28
+ 324:	80 2f       	mov	r24, r16
+ 326:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
+ 32a:	2f ef       	ldi	r18, 0xFF	; 255
+ 32c:	80 e7       	ldi	r24, 0x70	; 112
+ 32e:	92 e0       	ldi	r25, 0x02	; 2
+ 330:	21 50       	subi	r18, 0x01	; 1
+ 332:	80 40       	sbci	r24, 0x00	; 0
+ 334:	90 40       	sbci	r25, 0x00	; 0
+ 336:	e1 f7       	brne	.-8      	; 0x330 <draw_rectangle+0x74>
+ 338:	00 c0       	rjmp	.+0      	; 0x33a <draw_rectangle+0x7e>
+ 33a:	00 00       	nop
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	} x--;
+
+	for(; y < left_upper_corner_y + height; y++)
+ 33c:	cf 5f       	subi	r28, 0xFF	; 255
+ 33e:	8c 2f       	mov	r24, r28
+ 340:	90 e0       	ldi	r25, 0x00	; 0
+ 342:	8c 15       	cp	r24, r12
+ 344:	9d 05       	cpc	r25, r13
+ 346:	6c f3       	brlt	.-38     	; 0x322 <draw_rectangle+0x66>
+ 348:	01 c0       	rjmp	.+2      	; 0x34c <draw_rectangle+0x90>
+}
+
+void draw_rectangle(uint8_t left_upper_corner_x, uint8_t left_upper_corner_y, uint8_t width, uint8_t height)
+{
+	uint8_t x = left_upper_corner_x;
+	uint8_t y = left_upper_corner_y;
+ 34a:	cf 2d       	mov	r28, r15
+
+	for(; y < left_upper_corner_y + height; y++)
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	} y--;
+ 34c:	c1 50       	subi	r28, 0x01	; 1
+
+	for(; x > left_upper_corner_x; x--)
+ 34e:	e0 16       	cp	r14, r16
+ 350:	a0 f4       	brcc	.+40     	; 0x37a <draw_rectangle+0xbe>
+ 352:	10 2f       	mov	r17, r16
+	{
+		glcd_set_pixel(x,y);
+ 354:	6c 2f       	mov	r22, r28
+ 356:	81 2f       	mov	r24, r17
+ 358:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
+ 35c:	2f ef       	ldi	r18, 0xFF	; 255
+ 35e:	80 e7       	ldi	r24, 0x70	; 112
+ 360:	92 e0       	ldi	r25, 0x02	; 2
+ 362:	21 50       	subi	r18, 0x01	; 1
+ 364:	80 40       	sbci	r24, 0x00	; 0
+ 366:	90 40       	sbci	r25, 0x00	; 0
+ 368:	e1 f7       	brne	.-8      	; 0x362 <draw_rectangle+0xa6>
+ 36a:	00 c0       	rjmp	.+0      	; 0x36c <draw_rectangle+0xb0>
+ 36c:	00 00       	nop
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	} y--;
+
+	for(; x > left_upper_corner_x; x--)
+ 36e:	11 50       	subi	r17, 0x01	; 1
+ 370:	e1 16       	cp	r14, r17
+ 372:	80 f3       	brcs	.-32     	; 0x354 <draw_rectangle+0x98>
+ 374:	e3 94       	inc	r14
+ 376:	0e 0d       	add	r16, r14
+ 378:	0d 1b       	sub	r16, r29
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	}
+
+	for(; y > left_upper_corner_y; y--)
+ 37a:	fc 16       	cp	r15, r28
+ 37c:	80 f4       	brcc	.+32     	; 0x39e <draw_rectangle+0xe2>
+	{
+		glcd_set_pixel(x,y);
+ 37e:	6c 2f       	mov	r22, r28
+ 380:	80 2f       	mov	r24, r16
+ 382:	0e 94 0a 01 	call	0x214	; 0x214 <glcd_set_pixel>
+ 386:	2f ef       	ldi	r18, 0xFF	; 255
+ 388:	80 e7       	ldi	r24, 0x70	; 112
+ 38a:	92 e0       	ldi	r25, 0x02	; 2
+ 38c:	21 50       	subi	r18, 0x01	; 1
+ 38e:	80 40       	sbci	r24, 0x00	; 0
+ 390:	90 40       	sbci	r25, 0x00	; 0
+ 392:	e1 f7       	brne	.-8      	; 0x38c <draw_rectangle+0xd0>
+ 394:	00 c0       	rjmp	.+0      	; 0x396 <draw_rectangle+0xda>
+ 396:	00 00       	nop
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	}
+
+	for(; y > left_upper_corner_y; y--)
+ 398:	c1 50       	subi	r28, 0x01	; 1
+ 39a:	fc 16       	cp	r15, r28
+ 39c:	80 f3       	brcs	.-32     	; 0x37e <draw_rectangle+0xc2>
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	}
+ 39e:	df 91       	pop	r29
+ 3a0:	cf 91       	pop	r28
+ 3a2:	1f 91       	pop	r17
+ 3a4:	0f 91       	pop	r16
+ 3a6:	ff 90       	pop	r15
+ 3a8:	ef 90       	pop	r14
+ 3aa:	df 90       	pop	r13
+ 3ac:	cf 90       	pop	r12
+ 3ae:	08 95       	ret
+
+000003b0 <main>:
 
 #define DELAY 50
 
 int main(void)
 {
 	glcd_init();
- 34c:	0e 94 af 00 	call	0x15e	; 0x15e <glcd_init>
+ 3b0:	0e 94 af 00 	call	0x15e	; 0x15e <glcd_init>
 	uint8_t actual_controller = 0;
 	uint8_t should_clear = 0;
     while (1) 
     {
 		glcd_draw_single_screen(K44_filled, 1);
- 350:	61 e0       	ldi	r22, 0x01	; 1
- 352:	80 e6       	ldi	r24, 0x60	; 96
- 354:	90 e0       	ldi	r25, 0x00	; 0
- 356:	0e 94 33 01 	call	0x266	; 0x266 <glcd_draw_single_screen>
- 35a:	2f ef       	ldi	r18, 0xFF	; 255
- 35c:	89 e6       	ldi	r24, 0x69	; 105
- 35e:	98 e1       	ldi	r25, 0x18	; 24
- 360:	21 50       	subi	r18, 0x01	; 1
- 362:	80 40       	sbci	r24, 0x00	; 0
- 364:	90 40       	sbci	r25, 0x00	; 0
- 366:	e1 f7       	brne	.-8      	; 0x360 <main+0x14>
- 368:	00 c0       	rjmp	.+0      	; 0x36a <main+0x1e>
- 36a:	00 00       	nop
+ 3b4:	61 e0       	ldi	r22, 0x01	; 1
+ 3b6:	80 e6       	ldi	r24, 0x60	; 96
+ 3b8:	90 e0       	ldi	r25, 0x00	; 0
+ 3ba:	0e 94 33 01 	call	0x266	; 0x266 <glcd_draw_single_screen>
+ 3be:	2f ef       	ldi	r18, 0xFF	; 255
+ 3c0:	89 e6       	ldi	r24, 0x69	; 105
+ 3c2:	98 e1       	ldi	r25, 0x18	; 24
+ 3c4:	21 50       	subi	r18, 0x01	; 1
+ 3c6:	80 40       	sbci	r24, 0x00	; 0
+ 3c8:	90 40       	sbci	r25, 0x00	; 0
+ 3ca:	e1 f7       	brne	.-8      	; 0x3c4 <main+0x14>
+ 3cc:	00 c0       	rjmp	.+0      	; 0x3ce <main+0x1e>
+ 3ce:	00 00       	nop
 		_delay_ms(500);
 
 		glcd_draw_single_screen(K44_filled, 0);
- 36c:	60 e0       	ldi	r22, 0x00	; 0
- 36e:	80 e6       	ldi	r24, 0x60	; 96
- 370:	90 e0       	ldi	r25, 0x00	; 0
- 372:	0e 94 33 01 	call	0x266	; 0x266 <glcd_draw_single_screen>
- 376:	2f ef       	ldi	r18, 0xFF	; 255
- 378:	89 e6       	ldi	r24, 0x69	; 105
- 37a:	98 e1       	ldi	r25, 0x18	; 24
- 37c:	21 50       	subi	r18, 0x01	; 1
- 37e:	80 40       	sbci	r24, 0x00	; 0
- 380:	90 40       	sbci	r25, 0x00	; 0
- 382:	e1 f7       	brne	.-8      	; 0x37c <main+0x30>
- 384:	00 c0       	rjmp	.+0      	; 0x386 <main+0x3a>
- 386:	00 00       	nop
+ 3d0:	60 e0       	ldi	r22, 0x00	; 0
+ 3d2:	80 e6       	ldi	r24, 0x60	; 96
+ 3d4:	90 e0       	ldi	r25, 0x00	; 0
+ 3d6:	0e 94 33 01 	call	0x266	; 0x266 <glcd_draw_single_screen>
+ 3da:	2f ef       	ldi	r18, 0xFF	; 255
+ 3dc:	89 e6       	ldi	r24, 0x69	; 105
+ 3de:	98 e1       	ldi	r25, 0x18	; 24
+ 3e0:	21 50       	subi	r18, 0x01	; 1
+ 3e2:	80 40       	sbci	r24, 0x00	; 0
+ 3e4:	90 40       	sbci	r25, 0x00	; 0
+ 3e6:	e1 f7       	brne	.-8      	; 0x3e0 <main+0x30>
+ 3e8:	00 c0       	rjmp	.+0      	; 0x3ea <main+0x3a>
+ 3ea:	00 00       	nop
 		_delay_ms(500);
 
 		glcd_clear_all();
- 388:	0e 94 d3 00 	call	0x1a6	; 0x1a6 <glcd_clear_all>
- 38c:	2f ef       	ldi	r18, 0xFF	; 255
- 38e:	89 e6       	ldi	r24, 0x69	; 105
- 390:	98 e1       	ldi	r25, 0x18	; 24
- 392:	21 50       	subi	r18, 0x01	; 1
- 394:	80 40       	sbci	r24, 0x00	; 0
- 396:	90 40       	sbci	r25, 0x00	; 0
- 398:	e1 f7       	brne	.-8      	; 0x392 <main+0x46>
- 39a:	00 c0       	rjmp	.+0      	; 0x39c <main+0x50>
- 39c:	00 00       	nop
+ 3ec:	0e 94 d3 00 	call	0x1a6	; 0x1a6 <glcd_clear_all>
+ 3f0:	2f ef       	ldi	r18, 0xFF	; 255
+ 3f2:	89 e6       	ldi	r24, 0x69	; 105
+ 3f4:	98 e1       	ldi	r25, 0x18	; 24
+ 3f6:	21 50       	subi	r18, 0x01	; 1
+ 3f8:	80 40       	sbci	r24, 0x00	; 0
+ 3fa:	90 40       	sbci	r25, 0x00	; 0
+ 3fc:	e1 f7       	brne	.-8      	; 0x3f6 <main+0x46>
+ 3fe:	00 c0       	rjmp	.+0      	; 0x400 <__LOCK_REGION_LENGTH__>
+ 400:	00 00       	nop
 		_delay_ms(500);
+		draw_rectangle(0,0,127,63);
+ 402:	2f e3       	ldi	r18, 0x3F	; 63
+ 404:	30 e0       	ldi	r19, 0x00	; 0
+ 406:	4f e7       	ldi	r20, 0x7F	; 127
+ 408:	50 e0       	ldi	r21, 0x00	; 0
+ 40a:	60 e0       	ldi	r22, 0x00	; 0
+ 40c:	70 e0       	ldi	r23, 0x00	; 0
+ 40e:	80 e0       	ldi	r24, 0x00	; 0
+ 410:	90 e0       	ldi	r25, 0x00	; 0
+ 412:	0e 94 5e 01 	call	0x2bc	; 0x2bc <draw_rectangle>
+ 416:	2f ef       	ldi	r18, 0xFF	; 255
+ 418:	83 ed       	ldi	r24, 0xD3	; 211
+ 41a:	90 e3       	ldi	r25, 0x30	; 48
+ 41c:	21 50       	subi	r18, 0x01	; 1
+ 41e:	80 40       	sbci	r24, 0x00	; 0
+ 420:	90 40       	sbci	r25, 0x00	; 0
+ 422:	e1 f7       	brne	.-8      	; 0x41c <__LOCK_REGION_LENGTH__+0x1c>
+ 424:	00 c0       	rjmp	.+0      	; 0x426 <__LOCK_REGION_LENGTH__+0x26>
+ 426:	00 00       	nop
+ 428:	c5 cf       	rjmp	.-118    	; 0x3b4 <main+0x4>
 
-		draw_square();
- 39e:	0e 94 5e 01 	call	0x2bc	; 0x2bc <draw_square>
- 3a2:	2f ef       	ldi	r18, 0xFF	; 255
- 3a4:	83 ed       	ldi	r24, 0xD3	; 211
- 3a6:	90 e3       	ldi	r25, 0x30	; 48
- 3a8:	21 50       	subi	r18, 0x01	; 1
- 3aa:	80 40       	sbci	r24, 0x00	; 0
- 3ac:	90 40       	sbci	r25, 0x00	; 0
- 3ae:	e1 f7       	brne	.-8      	; 0x3a8 <main+0x5c>
- 3b0:	00 c0       	rjmp	.+0      	; 0x3b2 <main+0x66>
- 3b2:	00 00       	nop
- 3b4:	cd cf       	rjmp	.-102    	; 0x350 <main+0x4>
+0000042a <_exit>:
+ 42a:	f8 94       	cli
 
-000003b6 <_exit>:
- 3b6:	f8 94       	cli
-
-000003b8 <__stop_program>:
- 3b8:	ff cf       	rjmp	.-2      	; 0x3b8 <__stop_program>
+0000042c <__stop_program>:
+ 42c:	ff cf       	rjmp	.-2      	; 0x42c <__stop_program>

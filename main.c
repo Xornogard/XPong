@@ -7,7 +7,7 @@
 
 #include <avr/io.h>
 #include "glcd/glcd.h"
-#include "graphics.h"
+#include "graphics/graphics.h"
 
 void port_test();
 
@@ -28,44 +28,38 @@ int main(void)
 
 		glcd_clear_all();
 		_delay_ms(500);
-
-		draw_square();
+		draw_rectangle(0,0,127,63);
 		_delay_ms(1000);
 
     }
 }
 
-void draw_square()
+void draw_rectangle(uint8_t left_upper_corner_x, uint8_t left_upper_corner_y, uint8_t width, uint8_t height)
 {
-	uint8_t square_start = 30;
-	uint8_t square_size = 30;
+	uint8_t x = left_upper_corner_x;
+	uint8_t y = left_upper_corner_y;
 
-	uint8_t y = square_start;
+	for(; x < left_upper_corner_x + width; x++)
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	} x--;
 
-	uint8_t x = square_start;
+	for(; y < left_upper_corner_y + height; y++)
+	{
+		glcd_set_pixel(x,y);
+		_delay_ms(DELAY);
+	} y--;
 
-	for(; x < square_start + square_size; x++)
+	for(; x > left_upper_corner_x; x--)
 	{
 		glcd_set_pixel(x,y);
 		_delay_ms(DELAY);
 	}
 
-	for(; y < square_start + square_size; y++)
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
-
-	for(; x > square_start; x--)
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
-
-	for(; y > square_start; y--)
+	for(; y > left_upper_corner_y; y--)
 	{
 		glcd_set_pixel(x,y);
 		_delay_ms(DELAY);
 	}
 }
-

@@ -205,7 +205,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x3ba
+.text           0x00000000      0x42e
  *(.vectors)
  .vectors       0x00000000       0x54 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
                 0x00000000                __vector_default
@@ -326,16 +326,16 @@ END GROUP
  .text.glcd_draw_single_screen
                 0x00000266       0x56 glcd/glcd.o
                 0x00000266                glcd_draw_single_screen
- .text.draw_square
-                0x000002bc       0x90 main.o
-                0x000002bc                draw_square
- .text.main     0x0000034c       0x6a main.o
-                0x0000034c                main
-                0x000003b6                . = ALIGN (0x2)
+ .text.draw_rectangle
+                0x000002bc       0xf4 main.o
+                0x000002bc                draw_rectangle
+ .text.main     0x000003b0       0x7a main.o
+                0x000003b0                main
+                0x0000042a                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000003b6        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x000003b6                _exit
-                0x000003b6                exit
+ .fini9         0x0000042a        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x0000042a                _exit
+                0x0000042a                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -354,11 +354,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000003b6        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x0000042a        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000003ba                _etext = .
+                0x0000042e                _etext = .
 
-.data           0x00800060      0x200 load address 0x000003ba
+.data           0x00800060      0x200 load address 0x0000042e
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -384,8 +384,8 @@ END GROUP
                 0x00800661                glcd_y
                 0x00800662                enabled_controller
                 0x00800663                PROVIDE (__bss_end, .)
-                0x000003ba                __data_load_start = LOADADDR (.data)
-                0x000005ba                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000042e                __data_load_start = LOADADDR (.data)
+                0x0000062e                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800663        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -467,41 +467,41 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xf5a
+.debug_info     0x00000000      0xfac
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x4e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_info    0x000004e6      0x626 glcd/glcd.o
- .debug_info    0x00000b0c      0x44e main.o
+ .debug_info    0x00000b0c      0x4a0 main.o
 
-.debug_abbrev   0x00000000      0x824
+.debug_abbrev   0x00000000      0x835
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x4a3 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_abbrev  0x000004a3      0x1e2 glcd/glcd.o
- .debug_abbrev  0x00000685      0x19f main.o
+ .debug_abbrev  0x00000685      0x1b0 main.o
 
-.debug_line     0x00000000      0x6c9
+.debug_line     0x00000000      0x705
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x115 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_line    0x00000115      0x37a glcd/glcd.o
- .debug_line    0x0000048f      0x23a main.o
+ .debug_line    0x0000048f      0x276 main.o
 
-.debug_frame    0x00000000      0x17c
+.debug_frame    0x00000000      0x198
  *(.debug_frame)
  .debug_frame   0x00000000      0x13c glcd/glcd.o
- .debug_frame   0x0000013c       0x40 main.o
+ .debug_frame   0x0000013c       0x5c main.o
 
-.debug_str      0x00000000      0x4c5
+.debug_str      0x00000000      0x4e4
  *(.debug_str)
  .debug_str     0x00000000      0x196 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_str     0x00000196      0x2c0 glcd/glcd.o
                                 0x31e (size before relaxing)
- .debug_str     0x00000456       0x6f main.o
-                                0x251 (size before relaxing)
+ .debug_str     0x00000456       0x8e main.o
+                                0x270 (size before relaxing)
 
-.debug_loc      0x00000000      0x87b
+.debug_loc      0x00000000      0xa24
  *(.debug_loc)
  .debug_loc     0x00000000      0x60b glcd/glcd.o
- .debug_loc     0x0000060b      0x270 main.o
+ .debug_loc     0x0000060b      0x419 main.o
 
 .debug_macinfo
  *(.debug_macinfo)
