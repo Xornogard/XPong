@@ -15,11 +15,16 @@ void port_test();
 
 int main(void)
 {
-	glcd_init();
+	
 	uint8_t actual_controller = 0;
 	uint8_t should_clear = 0;
+
+	game_init();
     while (1) 
     {
+		game_loop();
+		_delay_ms(150);
+		continue;
 		glcd_draw_single_screen(K44_filled, 1);
 		_delay_ms(500);
 
