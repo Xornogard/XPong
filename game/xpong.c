@@ -61,20 +61,27 @@ void game_update()
 
 	if(ball.pos_x > GAME_CENTER)
 	{
+		int8_t target_position = ball.pos_y - PADDLE_SIZE/2;
 
-		right_player_paddle.position = ball.pos_y;
-		/*
-		uint8_t ball_paddle_relative_position = right_player_paddle.position - ball.pos_y + 1;
-		uint8_t center_difference_pos = ball_paddle_relative_position - right_player_paddle.position/2 + 1;
-
-		if(center_difference_pos > 0 && right_player_paddle.position + PADDLE_SIZE < TABLE_HEIGHT)
+		if(target_position+PADDLE_SIZE > SCREEN_HEIGHT)
 		{
-			right_player_paddle.position++;
+			target_position = SCREEN_HEIGHT - PADDLE_SIZE;
 		}
-		else if(center_difference_pos < 0 && right_player_paddle.position > 0)
+		else if(target_position < 0)
 		{
-			right_player_paddle.position--;
-		}*/
+			target_position = 0;
+		}
+
+		int8_t difference = target_position - right_player_paddle.position;
+
+		if(difference > 0)
+		{
+			right_player_paddle.position += difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
+		}
+		else if(difference < 0)
+		{
+			right_player_paddle.position -= difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
+		}
 	}
 
 	int8_t paddle_position = enc_value;

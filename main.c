@@ -23,13 +23,6 @@ int main(void)
     while (1) 
     {
 		game_loop();
-		_delay_ms(300);
-		continue;
-		glcd_draw_single_screen(K44_filled, 0);
-		_delay_ms(500);
-		glcd_draw_single_screen(K44_filled, 1);
-		_delay_ms(500);
-		glcd_clear_all();
 		_delay_ms(500);
     }
 }
