@@ -6,6 +6,7 @@
  */ 
 
 #include <avr/io.h>
+#include "game/xpong.h"
 #include "glcd/glcd.h"
 #include "graphics/graphics.h"
 

@@ -24,7 +24,6 @@ struct Paddle right_player_paddle;
 void game_init() 
 {
 	game_reset(BALL_START_SPEED_X);
-
 	glcd_init();
 	game_draw_static_graphic();
 

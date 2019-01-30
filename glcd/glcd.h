@@ -67,8 +67,7 @@ extern uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 
 #define E_RISE_TIME 5
 #define E_FALL_TIME 5
-#define DATA_WRITE_TIME 5
-
+#define DATA_WRITE_TIME 0
 
 //////////////////////////////////////////////////////////////////////////
 ///		PROCEDURES
@@ -90,7 +89,7 @@ void glcd_clear_pixel(uint8_t x, uint8_t y);
 
 void glcd_draw_single_screen(char* graphic, uint8_t controller);
 
-void clear_screen_data();
+void glcd_clear_screen_data();
 
 void redraw_screen_data();
 

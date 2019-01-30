@@ -7,7 +7,7 @@
  */ 
 
 
- #include "glcd.h"
+#include "glcd.h"
 
 uint8_t glcd_y;
 uint8_t glcd_x;
@@ -78,7 +78,7 @@ uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 	glcd_enable_mirroring_controllers();
 	glcd_clear();
 	glcd_enable_controller(0);
-	clear_screen_data();
+	glcd_clear_screen_data();
  }
 
  void glcd_enable_mirroring_controllers()
@@ -92,7 +92,7 @@ uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 
 	glcd_command(byte);
 
-	screen_data[glcd_y*(enabled_controller+1)][glcd_x] = byte;
+	screen_data[glcd_y + enabled_controller*SINGLE_CONTROLLER_SCREEN_WIDTH][glcd_x] = byte;
 
 	glcd_y++;
 	glcd_y %= SINGLE_CONTROLLER_SCREEN_WIDTH;
@@ -116,7 +116,7 @@ uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 	uint8_t pixel = y%BITS_IN_BYTE;
 	glcd_set_cursor(x,y);
 
-	uint8_t page_state = screen_data[glcd_y*(1+enabled_controller)][glcd_x] | 1 << pixel;
+	uint8_t page_state = screen_data[glcd_y + enabled_controller*SINGLE_CONTROLLER_SCREEN_WIDTH][glcd_x] | 1 << pixel;
 
 	glcd_write_data(page_state);
  }
@@ -126,7 +126,7 @@ uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 	uint8_t pixel = y%BITS_IN_BYTE;
 	glcd_set_cursor(x,y);
 
-	uint8_t page_state = screen_data[glcd_y*(1+enabled_controller)][glcd_x] & ~(1 << pixel);
+	uint8_t page_state = screen_data[glcd_y + enabled_controller*SINGLE_CONTROLLER_SCREEN_WIDTH][glcd_x] & ~(1 << pixel);
 
 	glcd_write_data(page_state);
  }
@@ -151,7 +151,7 @@ void glcd_draw_single_screen(char* const graphic, uint8_t controller)
 	}
 }
 
-void clear_screen_data()
+void glcd_clear_screen_data()
 {
 	for (uint8_t i=0; i<SCREEN_WIDTH; i++)
 	{
