@@ -23,7 +23,7 @@ struct Paddle right_player_paddle;
 
 void game_init() 
 {
-	game_reset();
+	game_reset(BALL_START_SPEED_X);
 
 	glcd_init();
 	game_draw_static_graphic();
@@ -36,8 +36,9 @@ void game_reset()
 {
 	ball.pos_x = BALL_START_POSITION_X;
 	ball.pos_y = BALL_START_POSITION_Y;
-	ball.speed_x = 2;
-	ball.speed_y = -2;
+
+	ball.speed_x = BALL_START_SPEED_X;
+	ball.speed_y = BALL_START_SPEED_Y;
 
 	left_player_paddle.position = PADDLE_START_POSITION;
 	right_player_paddle.position = PADDLE_START_POSITION;
@@ -60,12 +61,13 @@ void game_update()
 		{
 			right_player_paddle.score++;
 			game_reset();
+			ball.speed_x = -BALL_START_SPEED_X;
 		}
-
-		if(game_is_ball_in_paddle(left_player_paddle.position))
+		else if(game_is_ball_in_paddle(left_player_paddle.position))
 		{
-			ball.speed_x = -ball.speed_x;
-		}
+			ball.speed_y = game_get_ball_vertical_speed(left_player_paddle.position);
+			ball.speed_x = game_get_ball_reflected_horizontal_speed();
+		} 
 	}
 	else if(ball.pos_x >= RIGHT_TABLE_HALF - PADDLE_WIDTH)
 	{
@@ -74,36 +76,16 @@ void game_update()
 			left_player_paddle.score++;
 			game_reset();
 		}
-
-		if(game_is_ball_in_paddle(right_player_paddle.position))
+		else if(game_is_ball_in_paddle(right_player_paddle.position))
 		{
-			ball.speed_x = -ball.speed_x;
+			ball.speed_y = game_get_ball_vertical_speed(right_player_paddle.position);
+			ball.speed_x = game_get_ball_reflected_horizontal_speed();
 		}
 	}
 
 	if(ball.pos_x > GAME_CENTER)
 	{
-		int8_t target_position = ball.pos_y - PADDLE_SIZE/2;
-
-		if(target_position+PADDLE_SIZE > SCREEN_HEIGHT)
-		{
-			target_position = SCREEN_HEIGHT - PADDLE_SIZE;
-		}
-		else if(target_position < 0)
-		{
-			target_position = 0;
-		}
-
-		int8_t difference = target_position - right_player_paddle.position;
-
-		if(difference > 0)
-		{
-			right_player_paddle.position += difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
-		}
-		else if(difference < 0)
-		{
-			right_player_paddle.position -= difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
-		}
+		game_move_right_paddle();
 	}
 
 	int8_t paddle_position = enc_value;
@@ -120,15 +102,34 @@ void game_update()
 	}
 
 	left_player_paddle.position = paddle_position;
-
-	if(ball.pos_y <= 2 || ball.pos_y >= 62)
+		
+	if(ball.pos_x + ball.speed_x < LEFT_TABLE_HALF)
 	{
+		ball.pos_x = LEFT_TABLE_HALF;
+	}
+	else if(ball.pos_x + ball.speed_x > RIGHT_TABLE_HALF)
+	{
+		ball.pos_x = RIGHT_TABLE_HALF;
+	}
+	else
+	{
+		ball.pos_x += ball.speed_x;
+	}
+
+	if(ball.pos_y + ball.speed_y < 0)
+	{
+		ball.pos_y = 0;
 		ball.speed_y = -ball.speed_y;
 	}
-		
-
-	ball.pos_x += ball.speed_x;
-	ball.pos_y += ball.speed_y;
+	else if(ball.pos_y + ball.speed_y > SCREEN_HEIGHT-BALL_SIZE)
+	{
+		ball.pos_y = SCREEN_HEIGHT-BALL_SIZE;
+		ball.speed_y = -ball.speed_y;
+	}
+	else
+	{
+		ball.pos_y += ball.speed_y;
+	}
 }
 
 void game_clear_ball()
@@ -200,9 +201,83 @@ uint8_t game_is_ball_in_paddle(uint8_t paddle_position)
 	}
 }
 
-uint8_t game_get_ball_vertical_speed(uint8_t paddle_position)
+int8_t game_get_ball_vertical_speed(uint8_t paddle_position)
 {
+	if(ball.pos_y == paddle_position)
+	{
+		return -3;
+	}
+	else if(ball.pos_y == paddle_position+PADDLE_SIZE)
+	{
+		return 3;
+	}
+	else if(ball.pos_y < paddle_position + PADDLE_SIZE/4)
+	{
+		return -2;
+	}
+	else if(ball.pos_y > paddle_position+PADDLE_SIZE - PADDLE_SIZE/4)
+	{
+		return 2;
+	}
+	else if(ball.pos_y < paddle_position + PADDLE_SIZE/2)
+	{
+		return -1;
+	}
+	else if(ball.pos_y > paddle_position+PADDLE_SIZE - PADDLE_SIZE/2)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int8_t game_get_ball_reflected_horizontal_speed()
+{
+	int8_t result = -ball.speed_x;
+
+	if(ball.speed_y == 0)
+	{
+		result += result > 0 ? 1 : -1;
+
+	}
 	
+	if(result > BALL_MAX_SPEED)
+	{
+		result = BALL_MAX_SPEED;
+	}
+	else if(result < -BALL_MAX_SPEED)
+	{
+		result = -BALL_MAX_SPEED;
+	}
+	
+	return result;
+}
+
+void game_move_right_paddle()
+{
+	int8_t target_position = ball.pos_y - PADDLE_SIZE/2;
+
+	if(target_position+PADDLE_SIZE > SCREEN_HEIGHT)
+	{
+		target_position = SCREEN_HEIGHT - PADDLE_SIZE;
+	}
+	else if(target_position < 0)
+	{
+		target_position = 0;
+	}
+
+	int8_t difference = target_position - right_player_paddle.position;
+
+	if(difference > 0)
+	{
+		right_player_paddle.position += difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
+	}
+	else if(difference < 0)
+	{
+		right_player_paddle.position -= difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
+	}
 }
 
 void game_draw_static_graphic()

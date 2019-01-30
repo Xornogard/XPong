@@ -30,6 +30,10 @@
 #define PADDLE_SIZE 9
 #define PADDLE_WIDTH 2
 
+#define BALL_MAX_SPEED 6
+#define BALL_START_SPEED_X 2
+#define BALL_START_SPEED_Y 0
+
 #define BALL_START_POSITION_X SCREEN_WIDTH/2
 #define BALL_START_POSITION_Y SCREEN_HEIGHT/2
  
@@ -41,10 +45,10 @@
 
 struct Ball {
 	uint8_t pos_x;
-	uint8_t pos_y;
+	int8_t pos_y;
 
-	uint8_t speed_x;
-	uint8_t speed_y;
+	int8_t speed_x;
+	int8_t speed_y;
 };
 
 struct Paddle {
@@ -81,7 +85,10 @@ void game_draw_paddles();
 void game_draw_static_graphic();
 void game_draw_borders();
 
+void game_move_right_paddle();
+
 uint8_t game_is_ball_in_paddle(uint8_t paddle_position);
-uint8_t game_get_ball_vertical_speed(uint8_t paddle_position);
+int8_t game_get_ball_vertical_speed(uint8_t paddle_position);
+int8_t game_get_ball_reflected_horizontal_speed();
 
 #endif /* XPONG_H_ */
