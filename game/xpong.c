@@ -8,25 +8,6 @@
 #include "xpong.h"
 
 
-
-//////////////////////////////////////////////////////////////////////////
-///		STRUCTURES
-//////////////////////////////////////////////////////////////////////////
-
-struct Ball {
-	uint8_t pos_x;
-	uint8_t pos_y;
-
-	uint8_t speed_x;
-	uint8_t speed_y;
-};
-
-struct Paddle {
-	uint8_t previous_position;
-	uint8_t position;
-	uint8_t score;
-};
-
 //////////////////////////////////////////////////////////////////////////
 ///		VARIABLES
 //////////////////////////////////////////////////////////////////////////
@@ -46,6 +27,9 @@ void game_init()
 
 	glcd_init();
 	game_draw_static_graphic();
+
+	enc_init();
+	enc_value = PADDLE_START_POSITION;
 }
 
 void game_reset()
@@ -92,6 +76,8 @@ void game_update()
 			right_player_paddle.position--;
 		}*/
 	}
+
+	left_player_paddle.position = enc_value;
 
 	if(ball.pos_y <= 2 || ball.pos_y >= 62)
 	{

@@ -123,6 +123,12 @@
     <Compile Include="defines.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="encoder\encoder.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="encoder\encoder.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="game\xpong.c">
       <SubType>compile</SubType>
     </Compile>
@@ -146,6 +152,7 @@
     <Folder Include="glcd" />
     <Folder Include="game" />
     <Folder Include="graphics" />
+    <Folder Include="encoder" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
