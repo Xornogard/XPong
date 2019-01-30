@@ -81,4 +81,7 @@ void game_draw_paddles();
 void game_draw_static_graphic();
 void game_draw_borders();
 
+uint8_t game_is_ball_in_paddle(uint8_t paddle_position);
+uint8_t game_get_ball_vertical_speed(uint8_t paddle_position);
+
 #endif /* XPONG_H_ */

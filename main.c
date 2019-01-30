@@ -9,50 +9,13 @@
 #include "glcd/glcd.h"
 #include "graphics/graphics.h"
 
-void port_test();
-
-#define DELAY 50
-
 int main(void)
 {
-	
-	uint8_t actual_controller = 0;
-	uint8_t should_clear = 0;
-
 	game_init();
+
     while (1) 
     {
 		game_loop();
-		_delay_ms(500);
+		_delay_ms(200);
     }
-}
-
-void draw_rectangle(uint8_t left_upper_corner_x, uint8_t left_upper_corner_y, uint8_t width, uint8_t height)
-{
-	uint8_t x = left_upper_corner_x;
-	uint8_t y = left_upper_corner_y;
-
-	for(; x < left_upper_corner_x + width; x++)
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	} x--;
-
-	for(; y < left_upper_corner_y + height; y++)
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	} y--;
-
-	for(; x > left_upper_corner_x; x--)
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
-
-	for(; y > left_upper_corner_y; y--)
-	{
-		glcd_set_pixel(x,y);
-		_delay_ms(DELAY);
-	}
 }

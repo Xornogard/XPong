@@ -3,31 +3,31 @@ XPong.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000005ec  00000000  00000000  00000074  2**1
+  0 .text         0000065a  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000660  2**0
+  1 .data         00000000  00800060  00800060  000006ce  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          0000040f  00800060  00800060  00000660  2**0
+  2 .bss          0000040f  00800060  00800060  000006ce  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000660  2**0
+  3 .comment      00000030  00000000  00000000  000006ce  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000690  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000700  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000140  00000000  00000000  000006cc  2**0
+  5 .debug_aranges 00000148  00000000  00000000  0000073c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000014c4  00000000  00000000  0000080c  2**0
+  6 .debug_info   0000135f  00000000  00000000  00000884  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000a17  00000000  00000000  00001cd0  2**0
+  7 .debug_abbrev 000009d0  00000000  00000000  00001be3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000bbc  00000000  00000000  000026e7  2**0
+  8 .debug_line   00000b50  00000000  00000000  000025b3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000304  00000000  00000000  000032a4  2**2
+  9 .debug_frame  000002ec  00000000  00000000  00003104  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000065c  00000000  00000000  000035a8  2**0
+ 10 .debug_str    0000062d  00000000  00000000  000033f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000d98  00000000  00000000  00003c04  2**0
+ 11 .debug_loc    00000ab2  00000000  00000000  00003a1d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000100  00000000  00000000  0000499c  2**0
+ 12 .debug_ranges 00000108  00000000  00000000  000044cf  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -67,8 +67,8 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	ec ee       	ldi	r30, 0xEC	; 236
-  68:	f5 e0       	ldi	r31, 0x05	; 5
+  66:	ea e5       	ldi	r30, 0x5A	; 90
+  68:	f6 e0       	ldi	r31, 0x06	; 6
   6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
   6c:	05 90       	lpm	r0, Z+
   6e:	0d 92       	st	X+, r0
@@ -89,8 +89,8 @@ Disassembly of section .text:
   80:	af 36       	cpi	r26, 0x6F	; 111
   82:	b2 07       	cpc	r27, r18
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
-  86:	0e 94 e6 02 	call	0x5cc	; 0x5cc <main>
-  8a:	0c 94 f4 02 	jmp	0x5e8	; 0x5e8 <_exit>
+  86:	0e 94 1d 03 	call	0x63a	; 0x63a <main>
+  8a:	0c 94 2b 03 	jmp	0x656	; 0x656 <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -180,7 +180,7 @@ ISR( INT0_vect)
   f4:	18 95       	reti
 
 000000f6 <game_reset>:
-	right_player_paddle.previous_position = right_player_paddle.position;
+	
 }
 
 void game_draw_static_graphic()
@@ -201,667 +201,717 @@ void game_draw_static_graphic()
  110:	80 93 66 00 	sts	0x0066, r24	; 0x800066 <right_player_paddle+0x1>
  114:	08 95       	ret
 
-00000116 <game_update>:
- 116:	80 91 68 00 	lds	r24, 0x0068	; 0x800068 <ball>
- 11a:	9f ed       	ldi	r25, 0xDF	; 223
- 11c:	98 0f       	add	r25, r24
- 11e:	9f 33       	cpi	r25, 0x3F	; 63
- 120:	28 f0       	brcs	.+10     	; 0x12c <game_update+0x16>
- 122:	e8 e6       	ldi	r30, 0x68	; 104
- 124:	f0 e0       	ldi	r31, 0x00	; 0
- 126:	92 81       	ldd	r25, Z+2	; 0x02
- 128:	91 95       	neg	r25
- 12a:	92 83       	std	Z+2, r25	; 0x02
- 12c:	81 34       	cpi	r24, 0x41	; 65
- 12e:	88 f1       	brcs	.+98     	; 0x192 <game_update+0x7c>
- 130:	90 91 69 00 	lds	r25, 0x0069	; 0x800069 <ball+0x1>
- 134:	94 50       	subi	r25, 0x04	; 4
- 136:	29 2f       	mov	r18, r25
- 138:	09 2e       	mov	r0, r25
- 13a:	00 0c       	add	r0, r0
- 13c:	33 0b       	sbc	r19, r19
- 13e:	27 5f       	subi	r18, 0xF7	; 247
- 140:	3f 4f       	sbci	r19, 0xFF	; 255
- 142:	21 34       	cpi	r18, 0x41	; 65
- 144:	31 05       	cpc	r19, r1
- 146:	24 f4       	brge	.+8      	; 0x150 <game_update+0x3a>
- 148:	99 23       	and	r25, r25
- 14a:	1c f4       	brge	.+6      	; 0x152 <game_update+0x3c>
- 14c:	90 e0       	ldi	r25, 0x00	; 0
- 14e:	01 c0       	rjmp	.+2      	; 0x152 <game_update+0x3c>
- 150:	97 e3       	ldi	r25, 0x37	; 55
- 152:	20 91 66 00 	lds	r18, 0x0066	; 0x800066 <right_player_paddle+0x1>
- 156:	92 1b       	sub	r25, r18
- 158:	19 16       	cp	r1, r25
- 15a:	6c f4       	brge	.+26     	; 0x176 <game_update+0x60>
- 15c:	93 31       	cpi	r25, 0x13	; 19
- 15e:	24 f4       	brge	.+8      	; 0x168 <game_update+0x52>
- 160:	9a 30       	cpi	r25, 0x0A	; 10
- 162:	24 f4       	brge	.+8      	; 0x16c <game_update+0x56>
- 164:	92 e0       	ldi	r25, 0x02	; 2
- 166:	03 c0       	rjmp	.+6      	; 0x16e <game_update+0x58>
- 168:	99 e0       	ldi	r25, 0x09	; 9
- 16a:	01 c0       	rjmp	.+2      	; 0x16e <game_update+0x58>
- 16c:	94 e0       	ldi	r25, 0x04	; 4
- 16e:	29 0f       	add	r18, r25
- 170:	20 93 66 00 	sts	0x0066, r18	; 0x800066 <right_player_paddle+0x1>
- 174:	0e c0       	rjmp	.+28     	; 0x192 <game_update+0x7c>
- 176:	99 23       	and	r25, r25
- 178:	64 f4       	brge	.+24     	; 0x192 <game_update+0x7c>
- 17a:	93 31       	cpi	r25, 0x13	; 19
- 17c:	24 f4       	brge	.+8      	; 0x186 <game_update+0x70>
- 17e:	9a 30       	cpi	r25, 0x0A	; 10
- 180:	24 f4       	brge	.+8      	; 0x18a <game_update+0x74>
- 182:	92 e0       	ldi	r25, 0x02	; 2
- 184:	03 c0       	rjmp	.+6      	; 0x18c <game_update+0x76>
- 186:	99 e0       	ldi	r25, 0x09	; 9
- 188:	01 c0       	rjmp	.+2      	; 0x18c <game_update+0x76>
- 18a:	94 e0       	ldi	r25, 0x04	; 4
- 18c:	29 1b       	sub	r18, r25
- 18e:	20 93 66 00 	sts	0x0066, r18	; 0x800066 <right_player_paddle+0x1>
- 192:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <enc_value>
- 196:	29 2f       	mov	r18, r25
- 198:	09 2e       	mov	r0, r25
- 19a:	00 0c       	add	r0, r0
- 19c:	33 0b       	sbc	r19, r19
- 19e:	27 5f       	subi	r18, 0xF7	; 247
- 1a0:	3f 4f       	sbci	r19, 0xFF	; 255
- 1a2:	21 34       	cpi	r18, 0x41	; 65
- 1a4:	31 05       	cpc	r19, r1
- 1a6:	24 f0       	brlt	.+8      	; 0x1b0 <game_update+0x9a>
- 1a8:	97 e3       	ldi	r25, 0x37	; 55
- 1aa:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <enc_value>
- 1ae:	05 c0       	rjmp	.+10     	; 0x1ba <game_update+0xa4>
- 1b0:	99 23       	and	r25, r25
- 1b2:	1c f4       	brge	.+6      	; 0x1ba <game_update+0xa4>
- 1b4:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <enc_value>
- 1b8:	90 e0       	ldi	r25, 0x00	; 0
- 1ba:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <left_player_paddle+0x1>
- 1be:	90 91 69 00 	lds	r25, 0x0069	; 0x800069 <ball+0x1>
- 1c2:	2d ef       	ldi	r18, 0xFD	; 253
- 1c4:	29 0f       	add	r18, r25
- 1c6:	2b 33       	cpi	r18, 0x3B	; 59
- 1c8:	28 f0       	brcs	.+10     	; 0x1d4 <game_update+0xbe>
- 1ca:	e8 e6       	ldi	r30, 0x68	; 104
- 1cc:	f0 e0       	ldi	r31, 0x00	; 0
- 1ce:	23 81       	ldd	r18, Z+3	; 0x03
- 1d0:	21 95       	neg	r18
- 1d2:	23 83       	std	Z+3, r18	; 0x03
- 1d4:	e8 e6       	ldi	r30, 0x68	; 104
- 1d6:	f0 e0       	ldi	r31, 0x00	; 0
- 1d8:	22 81       	ldd	r18, Z+2	; 0x02
- 1da:	82 0f       	add	r24, r18
- 1dc:	80 83       	st	Z, r24
- 1de:	83 81       	ldd	r24, Z+3	; 0x03
- 1e0:	98 0f       	add	r25, r24
- 1e2:	91 83       	std	Z+1, r25	; 0x01
- 1e4:	08 95       	ret
+00000116 <game_clear_ball>:
+ 116:	cf 93       	push	r28
+ 118:	df 93       	push	r29
+ 11a:	c8 e6       	ldi	r28, 0x68	; 104
+ 11c:	d0 e0       	ldi	r29, 0x00	; 0
+ 11e:	69 81       	ldd	r22, Y+1	; 0x01
+ 120:	61 50       	subi	r22, 0x01	; 1
+ 122:	88 81       	ld	r24, Y
+ 124:	81 50       	subi	r24, 0x01	; 1
+ 126:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 12a:	88 81       	ld	r24, Y
+ 12c:	69 81       	ldd	r22, Y+1	; 0x01
+ 12e:	81 50       	subi	r24, 0x01	; 1
+ 130:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 134:	69 81       	ldd	r22, Y+1	; 0x01
+ 136:	6f 5f       	subi	r22, 0xFF	; 255
+ 138:	88 81       	ld	r24, Y
+ 13a:	81 50       	subi	r24, 0x01	; 1
+ 13c:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 140:	69 81       	ldd	r22, Y+1	; 0x01
+ 142:	61 50       	subi	r22, 0x01	; 1
+ 144:	88 81       	ld	r24, Y
+ 146:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 14a:	69 81       	ldd	r22, Y+1	; 0x01
+ 14c:	88 81       	ld	r24, Y
+ 14e:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 152:	69 81       	ldd	r22, Y+1	; 0x01
+ 154:	6f 5f       	subi	r22, 0xFF	; 255
+ 156:	88 81       	ld	r24, Y
+ 158:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 15c:	69 81       	ldd	r22, Y+1	; 0x01
+ 15e:	61 50       	subi	r22, 0x01	; 1
+ 160:	88 81       	ld	r24, Y
+ 162:	8f 5f       	subi	r24, 0xFF	; 255
+ 164:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 168:	88 81       	ld	r24, Y
+ 16a:	69 81       	ldd	r22, Y+1	; 0x01
+ 16c:	8f 5f       	subi	r24, 0xFF	; 255
+ 16e:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 172:	69 81       	ldd	r22, Y+1	; 0x01
+ 174:	6f 5f       	subi	r22, 0xFF	; 255
+ 176:	88 81       	ld	r24, Y
+ 178:	8f 5f       	subi	r24, 0xFF	; 255
+ 17a:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 17e:	df 91       	pop	r29
+ 180:	cf 91       	pop	r28
+ 182:	08 95       	ret
 
-000001e6 <game_clear_ball>:
- 1e6:	cf 93       	push	r28
- 1e8:	df 93       	push	r29
- 1ea:	c8 e6       	ldi	r28, 0x68	; 104
- 1ec:	d0 e0       	ldi	r29, 0x00	; 0
- 1ee:	69 81       	ldd	r22, Y+1	; 0x01
- 1f0:	61 50       	subi	r22, 0x01	; 1
- 1f2:	88 81       	ld	r24, Y
- 1f4:	81 50       	subi	r24, 0x01	; 1
- 1f6:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 1fa:	88 81       	ld	r24, Y
- 1fc:	69 81       	ldd	r22, Y+1	; 0x01
- 1fe:	81 50       	subi	r24, 0x01	; 1
- 200:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 204:	69 81       	ldd	r22, Y+1	; 0x01
- 206:	6f 5f       	subi	r22, 0xFF	; 255
- 208:	88 81       	ld	r24, Y
- 20a:	81 50       	subi	r24, 0x01	; 1
- 20c:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 210:	69 81       	ldd	r22, Y+1	; 0x01
- 212:	61 50       	subi	r22, 0x01	; 1
- 214:	88 81       	ld	r24, Y
- 216:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 21a:	69 81       	ldd	r22, Y+1	; 0x01
- 21c:	88 81       	ld	r24, Y
- 21e:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 222:	69 81       	ldd	r22, Y+1	; 0x01
- 224:	6f 5f       	subi	r22, 0xFF	; 255
- 226:	88 81       	ld	r24, Y
- 228:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 22c:	69 81       	ldd	r22, Y+1	; 0x01
- 22e:	61 50       	subi	r22, 0x01	; 1
- 230:	88 81       	ld	r24, Y
- 232:	8f 5f       	subi	r24, 0xFF	; 255
- 234:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 238:	88 81       	ld	r24, Y
- 23a:	69 81       	ldd	r22, Y+1	; 0x01
- 23c:	8f 5f       	subi	r24, 0xFF	; 255
- 23e:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 242:	69 81       	ldd	r22, Y+1	; 0x01
- 244:	6f 5f       	subi	r22, 0xFF	; 255
- 246:	88 81       	ld	r24, Y
- 248:	8f 5f       	subi	r24, 0xFF	; 255
- 24a:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 24e:	df 91       	pop	r29
- 250:	cf 91       	pop	r28
- 252:	08 95       	ret
+00000184 <game_clear_paddles>:
+ 184:	ef 92       	push	r14
+ 186:	ff 92       	push	r15
+ 188:	0f 93       	push	r16
+ 18a:	1f 93       	push	r17
+ 18c:	cf 93       	push	r28
+ 18e:	c0 e0       	ldi	r28, 0x00	; 0
+ 190:	0f 2e       	mov	r0, r31
+ 192:	f2 e6       	ldi	r31, 0x62	; 98
+ 194:	ef 2e       	mov	r14, r31
+ 196:	f0 e0       	ldi	r31, 0x00	; 0
+ 198:	ff 2e       	mov	r15, r31
+ 19a:	f0 2d       	mov	r31, r0
+ 19c:	05 e6       	ldi	r16, 0x65	; 101
+ 19e:	10 e0       	ldi	r17, 0x00	; 0
+ 1a0:	f7 01       	movw	r30, r14
+ 1a2:	60 81       	ld	r22, Z
+ 1a4:	6c 0f       	add	r22, r28
+ 1a6:	80 e2       	ldi	r24, 0x20	; 32
+ 1a8:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 1ac:	f8 01       	movw	r30, r16
+ 1ae:	60 81       	ld	r22, Z
+ 1b0:	6c 0f       	add	r22, r28
+ 1b2:	80 e6       	ldi	r24, 0x60	; 96
+ 1b4:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 1b8:	f7 01       	movw	r30, r14
+ 1ba:	60 81       	ld	r22, Z
+ 1bc:	6c 0f       	add	r22, r28
+ 1be:	81 e2       	ldi	r24, 0x21	; 33
+ 1c0:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 1c4:	f8 01       	movw	r30, r16
+ 1c6:	60 81       	ld	r22, Z
+ 1c8:	6c 0f       	add	r22, r28
+ 1ca:	8f e5       	ldi	r24, 0x5F	; 95
+ 1cc:	0e 94 f3 02 	call	0x5e6	; 0x5e6 <glcd_clear_pixel>
+ 1d0:	cf 5f       	subi	r28, 0xFF	; 255
+ 1d2:	c9 30       	cpi	r28, 0x09	; 9
+ 1d4:	29 f7       	brne	.-54     	; 0x1a0 <game_clear_paddles+0x1c>
+ 1d6:	cf 91       	pop	r28
+ 1d8:	1f 91       	pop	r17
+ 1da:	0f 91       	pop	r16
+ 1dc:	ff 90       	pop	r15
+ 1de:	ef 90       	pop	r14
+ 1e0:	08 95       	ret
 
-00000254 <game_clear_paddles>:
- 254:	ef 92       	push	r14
- 256:	ff 92       	push	r15
- 258:	0f 93       	push	r16
- 25a:	1f 93       	push	r17
- 25c:	cf 93       	push	r28
- 25e:	c0 e0       	ldi	r28, 0x00	; 0
- 260:	0f 2e       	mov	r0, r31
- 262:	f2 e6       	ldi	r31, 0x62	; 98
- 264:	ef 2e       	mov	r14, r31
- 266:	f0 e0       	ldi	r31, 0x00	; 0
- 268:	ff 2e       	mov	r15, r31
- 26a:	f0 2d       	mov	r31, r0
- 26c:	05 e6       	ldi	r16, 0x65	; 101
- 26e:	10 e0       	ldi	r17, 0x00	; 0
- 270:	f7 01       	movw	r30, r14
- 272:	60 81       	ld	r22, Z
- 274:	6c 0f       	add	r22, r28
- 276:	80 e2       	ldi	r24, 0x20	; 32
- 278:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 27c:	f8 01       	movw	r30, r16
- 27e:	60 81       	ld	r22, Z
- 280:	6c 0f       	add	r22, r28
- 282:	80 e6       	ldi	r24, 0x60	; 96
- 284:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 288:	f7 01       	movw	r30, r14
- 28a:	60 81       	ld	r22, Z
- 28c:	6c 0f       	add	r22, r28
- 28e:	81 e2       	ldi	r24, 0x21	; 33
- 290:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 294:	f8 01       	movw	r30, r16
- 296:	60 81       	ld	r22, Z
- 298:	6c 0f       	add	r22, r28
- 29a:	8f e5       	ldi	r24, 0x5F	; 95
- 29c:	0e 94 bc 02 	call	0x578	; 0x578 <glcd_clear_pixel>
- 2a0:	cf 5f       	subi	r28, 0xFF	; 255
- 2a2:	c9 30       	cpi	r28, 0x09	; 9
- 2a4:	29 f7       	brne	.-54     	; 0x270 <game_clear_paddles+0x1c>
- 2a6:	cf 91       	pop	r28
- 2a8:	1f 91       	pop	r17
- 2aa:	0f 91       	pop	r16
- 2ac:	ff 90       	pop	r15
- 2ae:	ef 90       	pop	r14
- 2b0:	08 95       	ret
+000001e2 <game_draw_ball>:
+ 1e2:	cf 93       	push	r28
+ 1e4:	df 93       	push	r29
+ 1e6:	c8 e6       	ldi	r28, 0x68	; 104
+ 1e8:	d0 e0       	ldi	r29, 0x00	; 0
+ 1ea:	69 81       	ldd	r22, Y+1	; 0x01
+ 1ec:	61 50       	subi	r22, 0x01	; 1
+ 1ee:	88 81       	ld	r24, Y
+ 1f0:	81 50       	subi	r24, 0x01	; 1
+ 1f2:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 1f6:	88 81       	ld	r24, Y
+ 1f8:	69 81       	ldd	r22, Y+1	; 0x01
+ 1fa:	81 50       	subi	r24, 0x01	; 1
+ 1fc:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 200:	69 81       	ldd	r22, Y+1	; 0x01
+ 202:	6f 5f       	subi	r22, 0xFF	; 255
+ 204:	88 81       	ld	r24, Y
+ 206:	81 50       	subi	r24, 0x01	; 1
+ 208:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 20c:	69 81       	ldd	r22, Y+1	; 0x01
+ 20e:	61 50       	subi	r22, 0x01	; 1
+ 210:	88 81       	ld	r24, Y
+ 212:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 216:	69 81       	ldd	r22, Y+1	; 0x01
+ 218:	88 81       	ld	r24, Y
+ 21a:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 21e:	69 81       	ldd	r22, Y+1	; 0x01
+ 220:	6f 5f       	subi	r22, 0xFF	; 255
+ 222:	88 81       	ld	r24, Y
+ 224:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 228:	69 81       	ldd	r22, Y+1	; 0x01
+ 22a:	61 50       	subi	r22, 0x01	; 1
+ 22c:	88 81       	ld	r24, Y
+ 22e:	8f 5f       	subi	r24, 0xFF	; 255
+ 230:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 234:	88 81       	ld	r24, Y
+ 236:	69 81       	ldd	r22, Y+1	; 0x01
+ 238:	8f 5f       	subi	r24, 0xFF	; 255
+ 23a:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 23e:	69 81       	ldd	r22, Y+1	; 0x01
+ 240:	6f 5f       	subi	r22, 0xFF	; 255
+ 242:	88 81       	ld	r24, Y
+ 244:	8f 5f       	subi	r24, 0xFF	; 255
+ 246:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 24a:	df 91       	pop	r29
+ 24c:	cf 91       	pop	r28
+ 24e:	08 95       	ret
 
-000002b2 <game_draw_ball>:
- 2b2:	cf 93       	push	r28
- 2b4:	df 93       	push	r29
- 2b6:	c8 e6       	ldi	r28, 0x68	; 104
- 2b8:	d0 e0       	ldi	r29, 0x00	; 0
- 2ba:	69 81       	ldd	r22, Y+1	; 0x01
- 2bc:	61 50       	subi	r22, 0x01	; 1
- 2be:	88 81       	ld	r24, Y
- 2c0:	81 50       	subi	r24, 0x01	; 1
- 2c2:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 2c6:	88 81       	ld	r24, Y
- 2c8:	69 81       	ldd	r22, Y+1	; 0x01
- 2ca:	81 50       	subi	r24, 0x01	; 1
- 2cc:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 2d0:	69 81       	ldd	r22, Y+1	; 0x01
- 2d2:	6f 5f       	subi	r22, 0xFF	; 255
- 2d4:	88 81       	ld	r24, Y
- 2d6:	81 50       	subi	r24, 0x01	; 1
- 2d8:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 2dc:	69 81       	ldd	r22, Y+1	; 0x01
- 2de:	61 50       	subi	r22, 0x01	; 1
- 2e0:	88 81       	ld	r24, Y
- 2e2:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 2e6:	69 81       	ldd	r22, Y+1	; 0x01
- 2e8:	88 81       	ld	r24, Y
- 2ea:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 2ee:	69 81       	ldd	r22, Y+1	; 0x01
- 2f0:	6f 5f       	subi	r22, 0xFF	; 255
- 2f2:	88 81       	ld	r24, Y
- 2f4:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 2f8:	69 81       	ldd	r22, Y+1	; 0x01
- 2fa:	61 50       	subi	r22, 0x01	; 1
- 2fc:	88 81       	ld	r24, Y
- 2fe:	8f 5f       	subi	r24, 0xFF	; 255
- 300:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 304:	88 81       	ld	r24, Y
- 306:	69 81       	ldd	r22, Y+1	; 0x01
- 308:	8f 5f       	subi	r24, 0xFF	; 255
- 30a:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 30e:	69 81       	ldd	r22, Y+1	; 0x01
- 310:	6f 5f       	subi	r22, 0xFF	; 255
- 312:	88 81       	ld	r24, Y
- 314:	8f 5f       	subi	r24, 0xFF	; 255
- 316:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 31a:	df 91       	pop	r29
- 31c:	cf 91       	pop	r28
- 31e:	08 95       	ret
+00000250 <game_draw_paddles>:
+ 250:	ef 92       	push	r14
+ 252:	ff 92       	push	r15
+ 254:	0f 93       	push	r16
+ 256:	1f 93       	push	r17
+ 258:	cf 93       	push	r28
+ 25a:	c0 e0       	ldi	r28, 0x00	; 0
+ 25c:	0f 2e       	mov	r0, r31
+ 25e:	f2 e6       	ldi	r31, 0x62	; 98
+ 260:	ef 2e       	mov	r14, r31
+ 262:	f0 e0       	ldi	r31, 0x00	; 0
+ 264:	ff 2e       	mov	r15, r31
+ 266:	f0 2d       	mov	r31, r0
+ 268:	05 e6       	ldi	r16, 0x65	; 101
+ 26a:	10 e0       	ldi	r17, 0x00	; 0
+ 26c:	f7 01       	movw	r30, r14
+ 26e:	61 81       	ldd	r22, Z+1	; 0x01
+ 270:	6c 0f       	add	r22, r28
+ 272:	80 e2       	ldi	r24, 0x20	; 32
+ 274:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 278:	f8 01       	movw	r30, r16
+ 27a:	61 81       	ldd	r22, Z+1	; 0x01
+ 27c:	6c 0f       	add	r22, r28
+ 27e:	80 e6       	ldi	r24, 0x60	; 96
+ 280:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 284:	f7 01       	movw	r30, r14
+ 286:	61 81       	ldd	r22, Z+1	; 0x01
+ 288:	6c 0f       	add	r22, r28
+ 28a:	81 e2       	ldi	r24, 0x21	; 33
+ 28c:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 290:	f8 01       	movw	r30, r16
+ 292:	61 81       	ldd	r22, Z+1	; 0x01
+ 294:	6c 0f       	add	r22, r28
+ 296:	8f e5       	ldi	r24, 0x5F	; 95
+ 298:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 29c:	cf 5f       	subi	r28, 0xFF	; 255
+ 29e:	c9 30       	cpi	r28, 0x09	; 9
+ 2a0:	29 f7       	brne	.-54     	; 0x26c <game_draw_paddles+0x1c>
+ 2a2:	e2 e6       	ldi	r30, 0x62	; 98
+ 2a4:	f0 e0       	ldi	r31, 0x00	; 0
+ 2a6:	81 81       	ldd	r24, Z+1	; 0x01
+ 2a8:	80 83       	st	Z, r24
+ 2aa:	e5 e6       	ldi	r30, 0x65	; 101
+ 2ac:	f0 e0       	ldi	r31, 0x00	; 0
+ 2ae:	81 81       	ldd	r24, Z+1	; 0x01
+ 2b0:	80 83       	st	Z, r24
+ 2b2:	cf 91       	pop	r28
+ 2b4:	1f 91       	pop	r17
+ 2b6:	0f 91       	pop	r16
+ 2b8:	ff 90       	pop	r15
+ 2ba:	ef 90       	pop	r14
+ 2bc:	08 95       	ret
 
-00000320 <game_draw_paddles>:
- 320:	ef 92       	push	r14
- 322:	ff 92       	push	r15
- 324:	0f 93       	push	r16
- 326:	1f 93       	push	r17
- 328:	cf 93       	push	r28
- 32a:	c0 e0       	ldi	r28, 0x00	; 0
- 32c:	0f 2e       	mov	r0, r31
- 32e:	f2 e6       	ldi	r31, 0x62	; 98
- 330:	ef 2e       	mov	r14, r31
- 332:	f0 e0       	ldi	r31, 0x00	; 0
- 334:	ff 2e       	mov	r15, r31
- 336:	f0 2d       	mov	r31, r0
- 338:	05 e6       	ldi	r16, 0x65	; 101
- 33a:	10 e0       	ldi	r17, 0x00	; 0
- 33c:	f7 01       	movw	r30, r14
- 33e:	61 81       	ldd	r22, Z+1	; 0x01
- 340:	6c 0f       	add	r22, r28
- 342:	80 e2       	ldi	r24, 0x20	; 32
- 344:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 348:	f8 01       	movw	r30, r16
- 34a:	61 81       	ldd	r22, Z+1	; 0x01
- 34c:	6c 0f       	add	r22, r28
- 34e:	80 e6       	ldi	r24, 0x60	; 96
- 350:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 354:	f7 01       	movw	r30, r14
- 356:	61 81       	ldd	r22, Z+1	; 0x01
- 358:	6c 0f       	add	r22, r28
- 35a:	81 e2       	ldi	r24, 0x21	; 33
- 35c:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 360:	f8 01       	movw	r30, r16
- 362:	61 81       	ldd	r22, Z+1	; 0x01
- 364:	6c 0f       	add	r22, r28
- 366:	8f e5       	ldi	r24, 0x5F	; 95
- 368:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 36c:	cf 5f       	subi	r28, 0xFF	; 255
- 36e:	c9 30       	cpi	r28, 0x09	; 9
- 370:	29 f7       	brne	.-54     	; 0x33c <game_draw_paddles+0x1c>
- 372:	e2 e6       	ldi	r30, 0x62	; 98
- 374:	f0 e0       	ldi	r31, 0x00	; 0
- 376:	81 81       	ldd	r24, Z+1	; 0x01
- 378:	80 83       	st	Z, r24
- 37a:	e5 e6       	ldi	r30, 0x65	; 101
- 37c:	f0 e0       	ldi	r31, 0x00	; 0
- 37e:	81 81       	ldd	r24, Z+1	; 0x01
- 380:	80 83       	st	Z, r24
- 382:	cf 91       	pop	r28
- 384:	1f 91       	pop	r17
- 386:	0f 91       	pop	r16
- 388:	ff 90       	pop	r15
- 38a:	ef 90       	pop	r14
- 38c:	08 95       	ret
+000002be <game_is_ball_in_paddle>:
+ 2be:	40 91 69 00 	lds	r20, 0x0069	; 0x800069 <ball+0x1>
+ 2c2:	48 17       	cp	r20, r24
+ 2c4:	58 f0       	brcs	.+22     	; 0x2dc <game_is_ball_in_paddle+0x1e>
+ 2c6:	28 2f       	mov	r18, r24
+ 2c8:	30 e0       	ldi	r19, 0x00	; 0
+ 2ca:	27 5f       	subi	r18, 0xF7	; 247
+ 2cc:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2ce:	50 e0       	ldi	r21, 0x00	; 0
+ 2d0:	81 e0       	ldi	r24, 0x01	; 1
+ 2d2:	24 17       	cp	r18, r20
+ 2d4:	35 07       	cpc	r19, r21
+ 2d6:	1c f4       	brge	.+6      	; 0x2de <game_is_ball_in_paddle+0x20>
+ 2d8:	80 e0       	ldi	r24, 0x00	; 0
+ 2da:	08 95       	ret
+ 2dc:	80 e0       	ldi	r24, 0x00	; 0
+ 2de:	08 95       	ret
 
-0000038e <game_loop>:
- 38e:	0e 94 f3 00 	call	0x1e6	; 0x1e6 <game_clear_ball>
- 392:	0e 94 2a 01 	call	0x254	; 0x254 <game_clear_paddles>
- 396:	0e 94 8b 00 	call	0x116	; 0x116 <game_update>
- 39a:	0e 94 59 01 	call	0x2b2	; 0x2b2 <game_draw_ball>
- 39e:	0e 94 90 01 	call	0x320	; 0x320 <game_draw_paddles>
- 3a2:	08 95       	ret
+000002e0 <game_update>:
+ 2e0:	80 91 68 00 	lds	r24, 0x0068	; 0x800068 <ball>
+ 2e4:	83 32       	cpi	r24, 0x23	; 35
+ 2e6:	a8 f4       	brcc	.+42     	; 0x312 <game_update+0x32>
+ 2e8:	81 32       	cpi	r24, 0x21	; 33
+ 2ea:	38 f4       	brcc	.+14     	; 0x2fa <game_update+0x1a>
+ 2ec:	e5 e6       	ldi	r30, 0x65	; 101
+ 2ee:	f0 e0       	ldi	r31, 0x00	; 0
+ 2f0:	82 81       	ldd	r24, Z+2	; 0x02
+ 2f2:	8f 5f       	subi	r24, 0xFF	; 255
+ 2f4:	82 83       	std	Z+2, r24	; 0x02
+ 2f6:	0e 94 7b 00 	call	0xf6	; 0xf6 <game_reset>
+ 2fa:	80 91 63 00 	lds	r24, 0x0063	; 0x800063 <left_player_paddle+0x1>
+ 2fe:	0e 94 5f 01 	call	0x2be	; 0x2be <game_is_ball_in_paddle>
+ 302:	88 23       	and	r24, r24
+ 304:	e1 f0       	breq	.+56     	; 0x33e <game_update+0x5e>
+ 306:	e8 e6       	ldi	r30, 0x68	; 104
+ 308:	f0 e0       	ldi	r31, 0x00	; 0
+ 30a:	82 81       	ldd	r24, Z+2	; 0x02
+ 30c:	81 95       	neg	r24
+ 30e:	82 83       	std	Z+2, r24	; 0x02
+ 310:	16 c0       	rjmp	.+44     	; 0x33e <game_update+0x5e>
+ 312:	8e 35       	cpi	r24, 0x5E	; 94
+ 314:	a0 f0       	brcs	.+40     	; 0x33e <game_update+0x5e>
+ 316:	80 36       	cpi	r24, 0x60	; 96
+ 318:	38 f0       	brcs	.+14     	; 0x328 <game_update+0x48>
+ 31a:	e2 e6       	ldi	r30, 0x62	; 98
+ 31c:	f0 e0       	ldi	r31, 0x00	; 0
+ 31e:	82 81       	ldd	r24, Z+2	; 0x02
+ 320:	8f 5f       	subi	r24, 0xFF	; 255
+ 322:	82 83       	std	Z+2, r24	; 0x02
+ 324:	0e 94 7b 00 	call	0xf6	; 0xf6 <game_reset>
+ 328:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <right_player_paddle+0x1>
+ 32c:	0e 94 5f 01 	call	0x2be	; 0x2be <game_is_ball_in_paddle>
+ 330:	88 23       	and	r24, r24
+ 332:	29 f0       	breq	.+10     	; 0x33e <game_update+0x5e>
+ 334:	e8 e6       	ldi	r30, 0x68	; 104
+ 336:	f0 e0       	ldi	r31, 0x00	; 0
+ 338:	82 81       	ldd	r24, Z+2	; 0x02
+ 33a:	81 95       	neg	r24
+ 33c:	82 83       	std	Z+2, r24	; 0x02
+ 33e:	90 91 68 00 	lds	r25, 0x0068	; 0x800068 <ball>
+ 342:	91 34       	cpi	r25, 0x41	; 65
+ 344:	88 f1       	brcs	.+98     	; 0x3a8 <game_update+0xc8>
+ 346:	80 91 69 00 	lds	r24, 0x0069	; 0x800069 <ball+0x1>
+ 34a:	84 50       	subi	r24, 0x04	; 4
+ 34c:	28 2f       	mov	r18, r24
+ 34e:	08 2e       	mov	r0, r24
+ 350:	00 0c       	add	r0, r0
+ 352:	33 0b       	sbc	r19, r19
+ 354:	27 5f       	subi	r18, 0xF7	; 247
+ 356:	3f 4f       	sbci	r19, 0xFF	; 255
+ 358:	21 34       	cpi	r18, 0x41	; 65
+ 35a:	31 05       	cpc	r19, r1
+ 35c:	24 f4       	brge	.+8      	; 0x366 <game_update+0x86>
+ 35e:	88 23       	and	r24, r24
+ 360:	1c f4       	brge	.+6      	; 0x368 <game_update+0x88>
+ 362:	80 e0       	ldi	r24, 0x00	; 0
+ 364:	01 c0       	rjmp	.+2      	; 0x368 <game_update+0x88>
+ 366:	87 e3       	ldi	r24, 0x37	; 55
+ 368:	20 91 66 00 	lds	r18, 0x0066	; 0x800066 <right_player_paddle+0x1>
+ 36c:	82 1b       	sub	r24, r18
+ 36e:	18 16       	cp	r1, r24
+ 370:	6c f4       	brge	.+26     	; 0x38c <game_update+0xac>
+ 372:	83 31       	cpi	r24, 0x13	; 19
+ 374:	24 f4       	brge	.+8      	; 0x37e <game_update+0x9e>
+ 376:	8a 30       	cpi	r24, 0x0A	; 10
+ 378:	24 f4       	brge	.+8      	; 0x382 <game_update+0xa2>
+ 37a:	82 e0       	ldi	r24, 0x02	; 2
+ 37c:	03 c0       	rjmp	.+6      	; 0x384 <game_update+0xa4>
+ 37e:	89 e0       	ldi	r24, 0x09	; 9
+ 380:	01 c0       	rjmp	.+2      	; 0x384 <game_update+0xa4>
+ 382:	84 e0       	ldi	r24, 0x04	; 4
+ 384:	28 0f       	add	r18, r24
+ 386:	20 93 66 00 	sts	0x0066, r18	; 0x800066 <right_player_paddle+0x1>
+ 38a:	0e c0       	rjmp	.+28     	; 0x3a8 <game_update+0xc8>
+ 38c:	88 23       	and	r24, r24
+ 38e:	64 f4       	brge	.+24     	; 0x3a8 <game_update+0xc8>
+ 390:	83 31       	cpi	r24, 0x13	; 19
+ 392:	24 f4       	brge	.+8      	; 0x39c <game_update+0xbc>
+ 394:	8a 30       	cpi	r24, 0x0A	; 10
+ 396:	24 f4       	brge	.+8      	; 0x3a0 <game_update+0xc0>
+ 398:	82 e0       	ldi	r24, 0x02	; 2
+ 39a:	03 c0       	rjmp	.+6      	; 0x3a2 <game_update+0xc2>
+ 39c:	89 e0       	ldi	r24, 0x09	; 9
+ 39e:	01 c0       	rjmp	.+2      	; 0x3a2 <game_update+0xc2>
+ 3a0:	84 e0       	ldi	r24, 0x04	; 4
+ 3a2:	28 1b       	sub	r18, r24
+ 3a4:	20 93 66 00 	sts	0x0066, r18	; 0x800066 <right_player_paddle+0x1>
+ 3a8:	80 91 61 00 	lds	r24, 0x0061	; 0x800061 <enc_value>
+ 3ac:	28 2f       	mov	r18, r24
+ 3ae:	08 2e       	mov	r0, r24
+ 3b0:	00 0c       	add	r0, r0
+ 3b2:	33 0b       	sbc	r19, r19
+ 3b4:	27 5f       	subi	r18, 0xF7	; 247
+ 3b6:	3f 4f       	sbci	r19, 0xFF	; 255
+ 3b8:	21 34       	cpi	r18, 0x41	; 65
+ 3ba:	31 05       	cpc	r19, r1
+ 3bc:	24 f0       	brlt	.+8      	; 0x3c6 <game_update+0xe6>
+ 3be:	87 e3       	ldi	r24, 0x37	; 55
+ 3c0:	80 93 61 00 	sts	0x0061, r24	; 0x800061 <enc_value>
+ 3c4:	05 c0       	rjmp	.+10     	; 0x3d0 <game_update+0xf0>
+ 3c6:	88 23       	and	r24, r24
+ 3c8:	1c f4       	brge	.+6      	; 0x3d0 <game_update+0xf0>
+ 3ca:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <enc_value>
+ 3ce:	80 e0       	ldi	r24, 0x00	; 0
+ 3d0:	80 93 63 00 	sts	0x0063, r24	; 0x800063 <left_player_paddle+0x1>
+ 3d4:	80 91 69 00 	lds	r24, 0x0069	; 0x800069 <ball+0x1>
+ 3d8:	2d ef       	ldi	r18, 0xFD	; 253
+ 3da:	28 0f       	add	r18, r24
+ 3dc:	2b 33       	cpi	r18, 0x3B	; 59
+ 3de:	28 f0       	brcs	.+10     	; 0x3ea <game_update+0x10a>
+ 3e0:	e8 e6       	ldi	r30, 0x68	; 104
+ 3e2:	f0 e0       	ldi	r31, 0x00	; 0
+ 3e4:	23 81       	ldd	r18, Z+3	; 0x03
+ 3e6:	21 95       	neg	r18
+ 3e8:	23 83       	std	Z+3, r18	; 0x03
+ 3ea:	e8 e6       	ldi	r30, 0x68	; 104
+ 3ec:	f0 e0       	ldi	r31, 0x00	; 0
+ 3ee:	22 81       	ldd	r18, Z+2	; 0x02
+ 3f0:	92 0f       	add	r25, r18
+ 3f2:	90 83       	st	Z, r25
+ 3f4:	93 81       	ldd	r25, Z+3	; 0x03
+ 3f6:	89 0f       	add	r24, r25
+ 3f8:	81 83       	std	Z+1, r24	; 0x01
+ 3fa:	08 95       	ret
 
-000003a4 <game_draw_borders>:
- 3a4:	cf 93       	push	r28
- 3a6:	c0 e0       	ldi	r28, 0x00	; 0
- 3a8:	6c 2f       	mov	r22, r28
- 3aa:	8e e1       	ldi	r24, 0x1E	; 30
- 3ac:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 3b0:	6c 2f       	mov	r22, r28
- 3b2:	82 e6       	ldi	r24, 0x62	; 98
- 3b4:	0e 94 93 02 	call	0x526	; 0x526 <glcd_set_pixel>
- 3b8:	cf 5f       	subi	r28, 0xFF	; 255
- 3ba:	c0 34       	cpi	r28, 0x40	; 64
- 3bc:	a9 f7       	brne	.-22     	; 0x3a8 <game_draw_borders+0x4>
- 3be:	cf 91       	pop	r28
- 3c0:	08 95       	ret
+000003fc <game_loop>:
+ 3fc:	0e 94 8b 00 	call	0x116	; 0x116 <game_clear_ball>
+ 400:	0e 94 c2 00 	call	0x184	; 0x184 <game_clear_paddles>
+ 404:	0e 94 70 01 	call	0x2e0	; 0x2e0 <game_update>
+ 408:	0e 94 f1 00 	call	0x1e2	; 0x1e2 <game_draw_ball>
+ 40c:	0e 94 28 01 	call	0x250	; 0x250 <game_draw_paddles>
+ 410:	08 95       	ret
 
-000003c2 <game_init>:
+00000412 <game_draw_borders>:
+ 412:	cf 93       	push	r28
+ 414:	c0 e0       	ldi	r28, 0x00	; 0
+ 416:	6c 2f       	mov	r22, r28
+ 418:	8e e1       	ldi	r24, 0x1E	; 30
+ 41a:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 41e:	6c 2f       	mov	r22, r28
+ 420:	82 e6       	ldi	r24, 0x62	; 98
+ 422:	0e 94 ca 02 	call	0x594	; 0x594 <glcd_set_pixel>
+ 426:	cf 5f       	subi	r28, 0xFF	; 255
+ 428:	c0 34       	cpi	r28, 0x40	; 64
+ 42a:	a9 f7       	brne	.-22     	; 0x416 <game_draw_borders+0x4>
+ 42c:	cf 91       	pop	r28
+ 42e:	08 95       	ret
+
+00000430 <game_init>:
 ///		PROCEDURES
 //////////////////////////////////////////////////////////////////////////
 
 void game_init() 
 {
 	game_reset();
- 3c2:	0e 94 7b 00 	call	0xf6	; 0xf6 <game_reset>
+ 430:	0e 94 7b 00 	call	0xf6	; 0xf6 <game_reset>
 
 	glcd_init();
- 3c6:	0e 94 53 02 	call	0x4a6	; 0x4a6 <glcd_init>
-	right_player_paddle.previous_position = right_player_paddle.position;
+ 434:	0e 94 8a 02 	call	0x514	; 0x514 <glcd_init>
+	
 }
 
 void game_draw_static_graphic()
 {
 	game_draw_borders();
- 3ca:	0e 94 d2 01 	call	0x3a4	; 0x3a4 <game_draw_borders>
+ 438:	0e 94 09 02 	call	0x412	; 0x412 <game_draw_borders>
 	game_reset();
 
 	glcd_init();
 	game_draw_static_graphic();
 
 	enc_init();
- 3ce:	0e 94 49 00 	call	0x92	; 0x92 <enc_init>
+ 43c:	0e 94 49 00 	call	0x92	; 0x92 <enc_init>
 	enc_value = PADDLE_START_POSITION;
- 3d2:	8c e1       	ldi	r24, 0x1C	; 28
- 3d4:	80 93 61 00 	sts	0x0061, r24	; 0x800061 <enc_value>
- 3d8:	08 95       	ret
+ 440:	8c e1       	ldi	r24, 0x1C	; 28
+ 442:	80 93 61 00 	sts	0x0061, r24	; 0x800061 <enc_value>
+ 446:	08 95       	ret
 
-000003da <glcd_enable_controller>:
+00000448 <glcd_enable_controller>:
  void glcd_clear_all()
  {
 	glcd_enable_mirroring_controllers();
 	glcd_clear();
 	glcd_enable_controller(0);
 	clear_screen_data();
- 3da:	88 23       	and	r24, r24
- 3dc:	31 f0       	breq	.+12     	; 0x3ea <glcd_enable_controller+0x10>
- 3de:	81 e0       	ldi	r24, 0x01	; 1
- 3e0:	80 93 6e 04 	sts	0x046E, r24	; 0x80046e <enabled_controller>
- 3e4:	da 98       	cbi	0x1b, 2	; 27
- 3e6:	db 9a       	sbi	0x1b, 3	; 27
- 3e8:	08 95       	ret
- 3ea:	10 92 6e 04 	sts	0x046E, r1	; 0x80046e <enabled_controller>
- 3ee:	db 98       	cbi	0x1b, 3	; 27
- 3f0:	da 9a       	sbi	0x1b, 2	; 27
- 3f2:	08 95       	ret
-
-000003f4 <glcd_command>:
- 3f4:	9f ef       	ldi	r25, 0xFF	; 255
- 3f6:	94 bb       	out	0x14, r25	; 20
- 3f8:	d8 9a       	sbi	0x1b, 0	; 27
- 3fa:	9a e1       	ldi	r25, 0x1A	; 26
- 3fc:	9a 95       	dec	r25
- 3fe:	f1 f7       	brne	.-4      	; 0x3fc <glcd_command+0x8>
- 400:	00 c0       	rjmp	.+0      	; 0x402 <__LOCK_REGION_LENGTH__+0x2>
- 402:	85 bb       	out	0x15, r24	; 21
- 404:	d8 98       	cbi	0x1b, 0	; 27
- 406:	8a e1       	ldi	r24, 0x1A	; 26
- 408:	8a 95       	dec	r24
- 40a:	f1 f7       	brne	.-4      	; 0x408 <__LOCK_REGION_LENGTH__+0x8>
- 40c:	00 c0       	rjmp	.+0      	; 0x40e <__LOCK_REGION_LENGTH__+0xe>
- 40e:	08 95       	ret
-
-00000410 <glcd_enable_mirroring_controllers>:
- 410:	8b b3       	in	r24, 0x1b	; 27
- 412:	83 7f       	andi	r24, 0xF3	; 243
- 414:	8b bb       	out	0x1b, r24	; 27
- 416:	08 95       	ret
-
-00000418 <glcd_write_data>:
- 418:	cf 93       	push	r28
- 41a:	c8 2f       	mov	r28, r24
- 41c:	d9 9a       	sbi	0x1b, 1	; 27
- 41e:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
- 422:	80 91 6d 04 	lds	r24, 0x046D	; 0x80046d <glcd_y>
- 426:	20 91 6e 04 	lds	r18, 0x046E	; 0x80046e <enabled_controller>
- 42a:	30 e0       	ldi	r19, 0x00	; 0
- 42c:	2f 5f       	subi	r18, 0xFF	; 255
- 42e:	3f 4f       	sbci	r19, 0xFF	; 255
- 430:	82 9f       	mul	r24, r18
- 432:	f0 01       	movw	r30, r0
- 434:	83 9f       	mul	r24, r19
- 436:	f0 0d       	add	r31, r0
- 438:	11 24       	eor	r1, r1
- 43a:	90 91 6c 00 	lds	r25, 0x006C	; 0x80006c <glcd_x>
- 43e:	ee 0f       	add	r30, r30
- 440:	ff 1f       	adc	r31, r31
- 442:	ee 0f       	add	r30, r30
- 444:	ff 1f       	adc	r31, r31
- 446:	ee 0f       	add	r30, r30
- 448:	ff 1f       	adc	r31, r31
- 44a:	e3 59       	subi	r30, 0x93	; 147
- 44c:	ff 4f       	sbci	r31, 0xFF	; 255
- 44e:	e9 0f       	add	r30, r25
- 450:	f1 1d       	adc	r31, r1
- 452:	c0 83       	st	Z, r28
- 454:	8f 5f       	subi	r24, 0xFF	; 255
- 456:	8f 73       	andi	r24, 0x3F	; 63
- 458:	80 93 6d 04 	sts	0x046D, r24	; 0x80046d <glcd_y>
- 45c:	d9 98       	cbi	0x1b, 1	; 27
- 45e:	cf 91       	pop	r28
+ 448:	88 23       	and	r24, r24
+ 44a:	31 f0       	breq	.+12     	; 0x458 <glcd_enable_controller+0x10>
+ 44c:	81 e0       	ldi	r24, 0x01	; 1
+ 44e:	80 93 6e 04 	sts	0x046E, r24	; 0x80046e <enabled_controller>
+ 452:	da 98       	cbi	0x1b, 2	; 27
+ 454:	db 9a       	sbi	0x1b, 3	; 27
+ 456:	08 95       	ret
+ 458:	10 92 6e 04 	sts	0x046E, r1	; 0x80046e <enabled_controller>
+ 45c:	db 98       	cbi	0x1b, 3	; 27
+ 45e:	da 9a       	sbi	0x1b, 2	; 27
  460:	08 95       	ret
 
-00000462 <glcd_clear>:
- 462:	1f 93       	push	r17
- 464:	cf 93       	push	r28
- 466:	df 93       	push	r29
- 468:	80 e4       	ldi	r24, 0x40	; 64
- 46a:	80 93 6d 04 	sts	0x046D, r24	; 0x80046d <glcd_y>
- 46e:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
- 472:	10 e0       	ldi	r17, 0x00	; 0
- 474:	81 2f       	mov	r24, r17
- 476:	88 6b       	ori	r24, 0xB8	; 184
- 478:	80 93 6c 00 	sts	0x006C, r24	; 0x80006c <glcd_x>
- 47c:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
- 480:	c0 e4       	ldi	r28, 0x40	; 64
- 482:	d0 e0       	ldi	r29, 0x00	; 0
- 484:	80 e0       	ldi	r24, 0x00	; 0
- 486:	0e 94 0c 02 	call	0x418	; 0x418 <glcd_write_data>
- 48a:	21 97       	sbiw	r28, 0x01	; 1
- 48c:	d9 f7       	brne	.-10     	; 0x484 <glcd_clear+0x22>
- 48e:	1f 5f       	subi	r17, 0xFF	; 255
- 490:	18 30       	cpi	r17, 0x08	; 8
- 492:	81 f7       	brne	.-32     	; 0x474 <glcd_clear+0x12>
- 494:	88 eb       	ldi	r24, 0xB8	; 184
- 496:	80 93 6c 00 	sts	0x006C, r24	; 0x80006c <glcd_x>
- 49a:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
- 49e:	df 91       	pop	r29
- 4a0:	cf 91       	pop	r28
- 4a2:	1f 91       	pop	r17
- 4a4:	08 95       	ret
+00000462 <glcd_command>:
+ 462:	9f ef       	ldi	r25, 0xFF	; 255
+ 464:	94 bb       	out	0x14, r25	; 20
+ 466:	d8 9a       	sbi	0x1b, 0	; 27
+ 468:	9a e1       	ldi	r25, 0x1A	; 26
+ 46a:	9a 95       	dec	r25
+ 46c:	f1 f7       	brne	.-4      	; 0x46a <glcd_command+0x8>
+ 46e:	00 c0       	rjmp	.+0      	; 0x470 <glcd_command+0xe>
+ 470:	85 bb       	out	0x15, r24	; 21
+ 472:	d8 98       	cbi	0x1b, 0	; 27
+ 474:	8a e1       	ldi	r24, 0x1A	; 26
+ 476:	8a 95       	dec	r24
+ 478:	f1 f7       	brne	.-4      	; 0x476 <glcd_command+0x14>
+ 47a:	00 c0       	rjmp	.+0      	; 0x47c <glcd_command+0x1a>
+ 47c:	08 95       	ret
 
-000004a6 <glcd_init>:
- 4a6:	8f ef       	ldi	r24, 0xFF	; 255
- 4a8:	84 bb       	out	0x14, r24	; 20
- 4aa:	8a b3       	in	r24, 0x1a	; 26
- 4ac:	8f 60       	ori	r24, 0x0F	; 15
- 4ae:	8a bb       	out	0x1a, r24	; 26
- 4b0:	0e 94 08 02 	call	0x410	; 0x410 <glcd_enable_mirroring_controllers>
- 4b4:	8f e3       	ldi	r24, 0x3F	; 63
- 4b6:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
- 4ba:	80 ec       	ldi	r24, 0xC0	; 192
- 4bc:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
- 4c0:	0e 94 31 02 	call	0x462	; 0x462 <glcd_clear>
- 4c4:	80 e0       	ldi	r24, 0x00	; 0
- 4c6:	0e 94 ed 01 	call	0x3da	; 0x3da <glcd_enable_controller>
- 4ca:	08 95       	ret
+0000047e <glcd_enable_mirroring_controllers>:
+ 47e:	8b b3       	in	r24, 0x1b	; 27
+ 480:	83 7f       	andi	r24, 0xF3	; 243
+ 482:	8b bb       	out	0x1b, r24	; 27
+ 484:	08 95       	ret
 
-000004cc <glcd_set_y>:
+00000486 <glcd_write_data>:
+ 486:	cf 93       	push	r28
+ 488:	c8 2f       	mov	r28, r24
+ 48a:	d9 9a       	sbi	0x1b, 1	; 27
+ 48c:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
+ 490:	80 91 6d 04 	lds	r24, 0x046D	; 0x80046d <glcd_y>
+ 494:	20 91 6e 04 	lds	r18, 0x046E	; 0x80046e <enabled_controller>
+ 498:	30 e0       	ldi	r19, 0x00	; 0
+ 49a:	2f 5f       	subi	r18, 0xFF	; 255
+ 49c:	3f 4f       	sbci	r19, 0xFF	; 255
+ 49e:	82 9f       	mul	r24, r18
+ 4a0:	f0 01       	movw	r30, r0
+ 4a2:	83 9f       	mul	r24, r19
+ 4a4:	f0 0d       	add	r31, r0
+ 4a6:	11 24       	eor	r1, r1
+ 4a8:	90 91 6c 00 	lds	r25, 0x006C	; 0x80006c <glcd_x>
+ 4ac:	ee 0f       	add	r30, r30
+ 4ae:	ff 1f       	adc	r31, r31
+ 4b0:	ee 0f       	add	r30, r30
+ 4b2:	ff 1f       	adc	r31, r31
+ 4b4:	ee 0f       	add	r30, r30
+ 4b6:	ff 1f       	adc	r31, r31
+ 4b8:	e3 59       	subi	r30, 0x93	; 147
+ 4ba:	ff 4f       	sbci	r31, 0xFF	; 255
+ 4bc:	e9 0f       	add	r30, r25
+ 4be:	f1 1d       	adc	r31, r1
+ 4c0:	c0 83       	st	Z, r28
+ 4c2:	8f 5f       	subi	r24, 0xFF	; 255
+ 4c4:	8f 73       	andi	r24, 0x3F	; 63
+ 4c6:	80 93 6d 04 	sts	0x046D, r24	; 0x80046d <glcd_y>
+ 4ca:	d9 98       	cbi	0x1b, 1	; 27
+ 4cc:	cf 91       	pop	r28
+ 4ce:	08 95       	ret
+
+000004d0 <glcd_clear>:
+ 4d0:	1f 93       	push	r17
+ 4d2:	cf 93       	push	r28
+ 4d4:	df 93       	push	r29
+ 4d6:	80 e4       	ldi	r24, 0x40	; 64
+ 4d8:	80 93 6d 04 	sts	0x046D, r24	; 0x80046d <glcd_y>
+ 4dc:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
+ 4e0:	10 e0       	ldi	r17, 0x00	; 0
+ 4e2:	81 2f       	mov	r24, r17
+ 4e4:	88 6b       	ori	r24, 0xB8	; 184
+ 4e6:	80 93 6c 00 	sts	0x006C, r24	; 0x80006c <glcd_x>
+ 4ea:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
+ 4ee:	c0 e4       	ldi	r28, 0x40	; 64
+ 4f0:	d0 e0       	ldi	r29, 0x00	; 0
+ 4f2:	80 e0       	ldi	r24, 0x00	; 0
+ 4f4:	0e 94 43 02 	call	0x486	; 0x486 <glcd_write_data>
+ 4f8:	21 97       	sbiw	r28, 0x01	; 1
+ 4fa:	d9 f7       	brne	.-10     	; 0x4f2 <glcd_clear+0x22>
+ 4fc:	1f 5f       	subi	r17, 0xFF	; 255
+ 4fe:	18 30       	cpi	r17, 0x08	; 8
+ 500:	81 f7       	brne	.-32     	; 0x4e2 <glcd_clear+0x12>
+ 502:	88 eb       	ldi	r24, 0xB8	; 184
+ 504:	80 93 6c 00 	sts	0x006C, r24	; 0x80006c <glcd_x>
+ 508:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
+ 50c:	df 91       	pop	r29
+ 50e:	cf 91       	pop	r28
+ 510:	1f 91       	pop	r17
+ 512:	08 95       	ret
+
+00000514 <glcd_init>:
+ 514:	8f ef       	ldi	r24, 0xFF	; 255
+ 516:	84 bb       	out	0x14, r24	; 20
+ 518:	8a b3       	in	r24, 0x1a	; 26
+ 51a:	8f 60       	ori	r24, 0x0F	; 15
+ 51c:	8a bb       	out	0x1a, r24	; 26
+ 51e:	0e 94 3f 02 	call	0x47e	; 0x47e <glcd_enable_mirroring_controllers>
+ 522:	8f e3       	ldi	r24, 0x3F	; 63
+ 524:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
+ 528:	80 ec       	ldi	r24, 0xC0	; 192
+ 52a:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
+ 52e:	0e 94 68 02 	call	0x4d0	; 0x4d0 <glcd_clear>
+ 532:	80 e0       	ldi	r24, 0x00	; 0
+ 534:	0e 94 24 02 	call	0x448	; 0x448 <glcd_enable_controller>
+ 538:	08 95       	ret
+
+0000053a <glcd_set_y>:
 //////////////////////////////////////////////////////////////////////////
 ////////COMMANDS
 //////////////////////////////////////////////////////////////////////////
 
 void glcd_set_y(uint8_t y)
 {
- 4cc:	cf 93       	push	r28
- 4ce:	c8 2f       	mov	r28, r24
+ 53a:	cf 93       	push	r28
+ 53c:	c8 2f       	mov	r28, r24
 	glcd_command(SET_Y(y));
- 4d0:	80 64       	ori	r24, 0x40	; 64
- 4d2:	80 93 6d 04 	sts	0x046D, r24	; 0x80046d <glcd_y>
- 4d6:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
+ 53e:	80 64       	ori	r24, 0x40	; 64
+ 540:	80 93 6d 04 	sts	0x046D, r24	; 0x80046d <glcd_y>
+ 544:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
 	glcd_y = y;
- 4da:	c0 93 6d 04 	sts	0x046D, r28	; 0x80046d <glcd_y>
+ 548:	c0 93 6d 04 	sts	0x046D, r28	; 0x80046d <glcd_y>
 }
- 4de:	cf 91       	pop	r28
- 4e0:	08 95       	ret
+ 54c:	cf 91       	pop	r28
+ 54e:	08 95       	ret
 
-000004e2 <glcd_set_x>:
+00000550 <glcd_set_x>:
 
 void glcd_set_x(uint8_t x)
 {
- 4e2:	cf 93       	push	r28
- 4e4:	c8 2f       	mov	r28, r24
+ 550:	cf 93       	push	r28
+ 552:	c8 2f       	mov	r28, r24
 	glcd_command(SET_X(x));
- 4e6:	88 6b       	ori	r24, 0xB8	; 184
- 4e8:	80 93 6c 00 	sts	0x006C, r24	; 0x80006c <glcd_x>
- 4ec:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <glcd_command>
+ 554:	88 6b       	ori	r24, 0xB8	; 184
+ 556:	80 93 6c 00 	sts	0x006C, r24	; 0x80006c <glcd_x>
+ 55a:	0e 94 31 02 	call	0x462	; 0x462 <glcd_command>
 	glcd_x = x;
- 4f0:	c0 93 6c 00 	sts	0x006C, r28	; 0x80006c <glcd_x>
- 4f4:	cf 91       	pop	r28
- 4f6:	08 95       	ret
+ 55e:	c0 93 6c 00 	sts	0x006C, r28	; 0x80006c <glcd_x>
+ 562:	cf 91       	pop	r28
+ 564:	08 95       	ret
 
-000004f8 <glcd_set_cursor>:
+00000566 <glcd_set_cursor>:
 
 	controller_port &= ~RS;
  }
 
  void glcd_set_cursor(uint8_t x, uint8_t y)
  {
- 4f8:	cf 93       	push	r28
- 4fa:	df 93       	push	r29
- 4fc:	c8 2f       	mov	r28, r24
- 4fe:	d6 2f       	mov	r29, r22
+ 566:	cf 93       	push	r28
+ 568:	df 93       	push	r29
+ 56a:	c8 2f       	mov	r28, r24
+ 56c:	d6 2f       	mov	r29, r22
 	uint8_t row = y/BITS_IN_BYTE;
 	uint8_t column = x % SINGLE_CONTROLLER_SCREEN_WIDTH;
 	uint8_t controller = x/SINGLE_CONTROLLER_SCREEN_WIDTH;
 
 	glcd_enable_controller(controller);
- 500:	82 95       	swap	r24
- 502:	86 95       	lsr	r24
- 504:	86 95       	lsr	r24
- 506:	83 70       	andi	r24, 0x03	; 3
- 508:	0e 94 ed 01 	call	0x3da	; 0x3da <glcd_enable_controller>
+ 56e:	82 95       	swap	r24
+ 570:	86 95       	lsr	r24
+ 572:	86 95       	lsr	r24
+ 574:	83 70       	andi	r24, 0x03	; 3
+ 576:	0e 94 24 02 	call	0x448	; 0x448 <glcd_enable_controller>
 	glcd_set_x(row);
- 50c:	8d 2f       	mov	r24, r29
- 50e:	86 95       	lsr	r24
- 510:	86 95       	lsr	r24
- 512:	86 95       	lsr	r24
- 514:	0e 94 71 02 	call	0x4e2	; 0x4e2 <glcd_set_x>
+ 57a:	8d 2f       	mov	r24, r29
+ 57c:	86 95       	lsr	r24
+ 57e:	86 95       	lsr	r24
+ 580:	86 95       	lsr	r24
+ 582:	0e 94 a8 02 	call	0x550	; 0x550 <glcd_set_x>
 	glcd_set_y(column);
- 518:	8c 2f       	mov	r24, r28
- 51a:	8f 73       	andi	r24, 0x3F	; 63
- 51c:	0e 94 66 02 	call	0x4cc	; 0x4cc <glcd_set_y>
+ 586:	8c 2f       	mov	r24, r28
+ 588:	8f 73       	andi	r24, 0x3F	; 63
+ 58a:	0e 94 9d 02 	call	0x53a	; 0x53a <glcd_set_y>
  }
- 520:	df 91       	pop	r29
- 522:	cf 91       	pop	r28
- 524:	08 95       	ret
+ 58e:	df 91       	pop	r29
+ 590:	cf 91       	pop	r28
+ 592:	08 95       	ret
 
-00000526 <glcd_set_pixel>:
+00000594 <glcd_set_pixel>:
 
  void glcd_set_pixel(uint8_t x, uint8_t y)
  {
- 526:	cf 93       	push	r28
- 528:	c6 2f       	mov	r28, r22
+ 594:	cf 93       	push	r28
+ 596:	c6 2f       	mov	r28, r22
 	uint8_t pixel = y%BITS_IN_BYTE;
 	glcd_set_cursor(x,y);
- 52a:	0e 94 7c 02 	call	0x4f8	; 0x4f8 <glcd_set_cursor>
+ 598:	0e 94 b3 02 	call	0x566	; 0x566 <glcd_set_cursor>
 
 	uint8_t page_state = screen_data[glcd_y*(1+enabled_controller)][glcd_x] | 1 << pixel;
- 52e:	80 91 6e 04 	lds	r24, 0x046E	; 0x80046e <enabled_controller>
- 532:	90 e0       	ldi	r25, 0x00	; 0
- 534:	01 96       	adiw	r24, 0x01	; 1
- 536:	20 91 6d 04 	lds	r18, 0x046D	; 0x80046d <glcd_y>
- 53a:	28 9f       	mul	r18, r24
- 53c:	f0 01       	movw	r30, r0
- 53e:	29 9f       	mul	r18, r25
- 540:	f0 0d       	add	r31, r0
- 542:	11 24       	eor	r1, r1
- 544:	80 91 6c 00 	lds	r24, 0x006C	; 0x80006c <glcd_x>
- 548:	ee 0f       	add	r30, r30
- 54a:	ff 1f       	adc	r31, r31
- 54c:	ee 0f       	add	r30, r30
- 54e:	ff 1f       	adc	r31, r31
- 550:	ee 0f       	add	r30, r30
- 552:	ff 1f       	adc	r31, r31
- 554:	e3 59       	subi	r30, 0x93	; 147
- 556:	ff 4f       	sbci	r31, 0xFF	; 255
- 558:	e8 0f       	add	r30, r24
- 55a:	f1 1d       	adc	r31, r1
+ 59c:	80 91 6e 04 	lds	r24, 0x046E	; 0x80046e <enabled_controller>
+ 5a0:	90 e0       	ldi	r25, 0x00	; 0
+ 5a2:	01 96       	adiw	r24, 0x01	; 1
+ 5a4:	20 91 6d 04 	lds	r18, 0x046D	; 0x80046d <glcd_y>
+ 5a8:	28 9f       	mul	r18, r24
+ 5aa:	f0 01       	movw	r30, r0
+ 5ac:	29 9f       	mul	r18, r25
+ 5ae:	f0 0d       	add	r31, r0
+ 5b0:	11 24       	eor	r1, r1
+ 5b2:	80 91 6c 00 	lds	r24, 0x006C	; 0x80006c <glcd_x>
+ 5b6:	ee 0f       	add	r30, r30
+ 5b8:	ff 1f       	adc	r31, r31
+ 5ba:	ee 0f       	add	r30, r30
+ 5bc:	ff 1f       	adc	r31, r31
+ 5be:	ee 0f       	add	r30, r30
+ 5c0:	ff 1f       	adc	r31, r31
+ 5c2:	e3 59       	subi	r30, 0x93	; 147
+ 5c4:	ff 4f       	sbci	r31, 0xFF	; 255
+ 5c6:	e8 0f       	add	r30, r24
+ 5c8:	f1 1d       	adc	r31, r1
 
 	glcd_write_data(page_state);
- 55c:	c7 70       	andi	r28, 0x07	; 7
- 55e:	81 e0       	ldi	r24, 0x01	; 1
- 560:	90 e0       	ldi	r25, 0x00	; 0
- 562:	02 c0       	rjmp	.+4      	; 0x568 <glcd_set_pixel+0x42>
- 564:	88 0f       	add	r24, r24
- 566:	99 1f       	adc	r25, r25
- 568:	ca 95       	dec	r28
- 56a:	e2 f7       	brpl	.-8      	; 0x564 <glcd_set_pixel+0x3e>
- 56c:	90 81       	ld	r25, Z
- 56e:	89 2b       	or	r24, r25
- 570:	0e 94 0c 02 	call	0x418	; 0x418 <glcd_write_data>
+ 5ca:	c7 70       	andi	r28, 0x07	; 7
+ 5cc:	81 e0       	ldi	r24, 0x01	; 1
+ 5ce:	90 e0       	ldi	r25, 0x00	; 0
+ 5d0:	02 c0       	rjmp	.+4      	; 0x5d6 <glcd_set_pixel+0x42>
+ 5d2:	88 0f       	add	r24, r24
+ 5d4:	99 1f       	adc	r25, r25
+ 5d6:	ca 95       	dec	r28
+ 5d8:	e2 f7       	brpl	.-8      	; 0x5d2 <glcd_set_pixel+0x3e>
+ 5da:	90 81       	ld	r25, Z
+ 5dc:	89 2b       	or	r24, r25
+ 5de:	0e 94 43 02 	call	0x486	; 0x486 <glcd_write_data>
  }
- 574:	cf 91       	pop	r28
- 576:	08 95       	ret
+ 5e2:	cf 91       	pop	r28
+ 5e4:	08 95       	ret
 
-00000578 <glcd_clear_pixel>:
+000005e6 <glcd_clear_pixel>:
 
  void glcd_clear_pixel(uint8_t x, uint8_t y)
  {
- 578:	cf 93       	push	r28
- 57a:	c6 2f       	mov	r28, r22
+ 5e6:	cf 93       	push	r28
+ 5e8:	c6 2f       	mov	r28, r22
 	uint8_t pixel = y%BITS_IN_BYTE;
 	glcd_set_cursor(x,y);
- 57c:	0e 94 7c 02 	call	0x4f8	; 0x4f8 <glcd_set_cursor>
+ 5ea:	0e 94 b3 02 	call	0x566	; 0x566 <glcd_set_cursor>
 
 	uint8_t page_state = screen_data[glcd_y*(1+enabled_controller)][glcd_x] & ~(1 << pixel);
- 580:	80 91 6e 04 	lds	r24, 0x046E	; 0x80046e <enabled_controller>
- 584:	90 e0       	ldi	r25, 0x00	; 0
- 586:	01 96       	adiw	r24, 0x01	; 1
- 588:	20 91 6d 04 	lds	r18, 0x046D	; 0x80046d <glcd_y>
- 58c:	28 9f       	mul	r18, r24
- 58e:	f0 01       	movw	r30, r0
- 590:	29 9f       	mul	r18, r25
- 592:	f0 0d       	add	r31, r0
- 594:	11 24       	eor	r1, r1
- 596:	80 91 6c 00 	lds	r24, 0x006C	; 0x80006c <glcd_x>
- 59a:	ee 0f       	add	r30, r30
- 59c:	ff 1f       	adc	r31, r31
- 59e:	ee 0f       	add	r30, r30
- 5a0:	ff 1f       	adc	r31, r31
- 5a2:	ee 0f       	add	r30, r30
- 5a4:	ff 1f       	adc	r31, r31
- 5a6:	e3 59       	subi	r30, 0x93	; 147
- 5a8:	ff 4f       	sbci	r31, 0xFF	; 255
- 5aa:	e8 0f       	add	r30, r24
- 5ac:	f1 1d       	adc	r31, r1
+ 5ee:	80 91 6e 04 	lds	r24, 0x046E	; 0x80046e <enabled_controller>
+ 5f2:	90 e0       	ldi	r25, 0x00	; 0
+ 5f4:	01 96       	adiw	r24, 0x01	; 1
+ 5f6:	20 91 6d 04 	lds	r18, 0x046D	; 0x80046d <glcd_y>
+ 5fa:	28 9f       	mul	r18, r24
+ 5fc:	f0 01       	movw	r30, r0
+ 5fe:	29 9f       	mul	r18, r25
+ 600:	f0 0d       	add	r31, r0
+ 602:	11 24       	eor	r1, r1
+ 604:	80 91 6c 00 	lds	r24, 0x006C	; 0x80006c <glcd_x>
+ 608:	ee 0f       	add	r30, r30
+ 60a:	ff 1f       	adc	r31, r31
+ 60c:	ee 0f       	add	r30, r30
+ 60e:	ff 1f       	adc	r31, r31
+ 610:	ee 0f       	add	r30, r30
+ 612:	ff 1f       	adc	r31, r31
+ 614:	e3 59       	subi	r30, 0x93	; 147
+ 616:	ff 4f       	sbci	r31, 0xFF	; 255
+ 618:	e8 0f       	add	r30, r24
+ 61a:	f1 1d       	adc	r31, r1
 
 	glcd_write_data(page_state);
- 5ae:	c7 70       	andi	r28, 0x07	; 7
- 5b0:	81 e0       	ldi	r24, 0x01	; 1
- 5b2:	90 e0       	ldi	r25, 0x00	; 0
- 5b4:	02 c0       	rjmp	.+4      	; 0x5ba <glcd_clear_pixel+0x42>
- 5b6:	88 0f       	add	r24, r24
- 5b8:	99 1f       	adc	r25, r25
- 5ba:	ca 95       	dec	r28
- 5bc:	e2 f7       	brpl	.-8      	; 0x5b6 <glcd_clear_pixel+0x3e>
- 5be:	80 95       	com	r24
- 5c0:	90 81       	ld	r25, Z
- 5c2:	89 23       	and	r24, r25
- 5c4:	0e 94 0c 02 	call	0x418	; 0x418 <glcd_write_data>
+ 61c:	c7 70       	andi	r28, 0x07	; 7
+ 61e:	81 e0       	ldi	r24, 0x01	; 1
+ 620:	90 e0       	ldi	r25, 0x00	; 0
+ 622:	02 c0       	rjmp	.+4      	; 0x628 <glcd_clear_pixel+0x42>
+ 624:	88 0f       	add	r24, r24
+ 626:	99 1f       	adc	r25, r25
+ 628:	ca 95       	dec	r28
+ 62a:	e2 f7       	brpl	.-8      	; 0x624 <glcd_clear_pixel+0x3e>
+ 62c:	80 95       	com	r24
+ 62e:	90 81       	ld	r25, Z
+ 630:	89 23       	and	r24, r25
+ 632:	0e 94 43 02 	call	0x486	; 0x486 <glcd_write_data>
  }
- 5c8:	cf 91       	pop	r28
- 5ca:	08 95       	ret
+ 636:	cf 91       	pop	r28
+ 638:	08 95       	ret
 
-000005cc <main>:
+0000063a <main>:
+#include "glcd/glcd.h"
+#include "graphics/graphics.h"
+
+int main(void)
 {
-	
-	uint8_t actual_controller = 0;
-	uint8_t should_clear = 0;
-
 	game_init();
- 5cc:	0e 94 e1 01 	call	0x3c2	; 0x3c2 <game_init>
+ 63a:	0e 94 18 02 	call	0x430	; 0x430 <game_init>
+
     while (1) 
     {
 		game_loop();
- 5d0:	0e 94 c7 01 	call	0x38e	; 0x38e <game_loop>
+ 63e:	0e 94 fe 01 	call	0x3fc	; 0x3fc <game_loop>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 5d4:	2f ef       	ldi	r18, 0xFF	; 255
- 5d6:	89 e6       	ldi	r24, 0x69	; 105
- 5d8:	98 e1       	ldi	r25, 0x18	; 24
- 5da:	21 50       	subi	r18, 0x01	; 1
- 5dc:	80 40       	sbci	r24, 0x00	; 0
- 5de:	90 40       	sbci	r25, 0x00	; 0
- 5e0:	e1 f7       	brne	.-8      	; 0x5da <main+0xe>
- 5e2:	00 c0       	rjmp	.+0      	; 0x5e4 <main+0x18>
- 5e4:	00 00       	nop
- 5e6:	f4 cf       	rjmp	.-24     	; 0x5d0 <main+0x4>
+ 642:	2f ef       	ldi	r18, 0xFF	; 255
+ 644:	83 ec       	ldi	r24, 0xC3	; 195
+ 646:	99 e0       	ldi	r25, 0x09	; 9
+ 648:	21 50       	subi	r18, 0x01	; 1
+ 64a:	80 40       	sbci	r24, 0x00	; 0
+ 64c:	90 40       	sbci	r25, 0x00	; 0
+ 64e:	e1 f7       	brne	.-8      	; 0x648 <main+0xe>
+ 650:	00 c0       	rjmp	.+0      	; 0x652 <main+0x18>
+ 652:	00 00       	nop
+ 654:	f4 cf       	rjmp	.-24     	; 0x63e <main+0x4>
 
-000005e8 <_exit>:
- 5e8:	f8 94       	cli
+00000656 <_exit>:
+ 656:	f8 94       	cli
 
-000005ea <__stop_program>:
- 5ea:	ff cf       	rjmp	.-2      	; 0x5ea <__stop_program>
+00000658 <__stop_program>:
+ 658:	ff cf       	rjmp	.-2      	; 0x658 <__stop_program>

@@ -54,9 +54,31 @@ void game_loop()
 
 void game_update()
 {
-	if(ball.pos_x <= LEFT_TABLE_HALF || ball.pos_x >= RIGHT_TABLE_HALF)
+	if(ball.pos_x <= LEFT_TABLE_HALF+PADDLE_WIDTH)
 	{
-		ball.speed_x = -ball.speed_x;
+		if(ball.pos_x <= LEFT_TABLE_HALF)
+		{
+			right_player_paddle.score++;
+			game_reset();
+		}
+
+		if(game_is_ball_in_paddle(left_player_paddle.position))
+		{
+			ball.speed_x = -ball.speed_x;
+		}
+	}
+	else if(ball.pos_x >= RIGHT_TABLE_HALF - PADDLE_WIDTH)
+	{
+		if(ball.pos_x >= RIGHT_TABLE_HALF)
+		{
+			left_player_paddle.score++;
+			game_reset();
+		}
+
+		if(game_is_ball_in_paddle(right_player_paddle.position))
+		{
+			ball.speed_x = -ball.speed_x;
+		}
 	}
 
 	if(ball.pos_x > GAME_CENTER)
@@ -164,6 +186,23 @@ void game_draw_paddles()
 
 	left_player_paddle.previous_position = left_player_paddle.position;
 	right_player_paddle.previous_position = right_player_paddle.position;
+}
+
+uint8_t game_is_ball_in_paddle(uint8_t paddle_position)
+{
+	if(paddle_position > ball.pos_y || paddle_position+PADDLE_SIZE < ball.pos_y)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
+uint8_t game_get_ball_vertical_speed(uint8_t paddle_position)
+{
+	
 }
 
 void game_draw_static_graphic()
