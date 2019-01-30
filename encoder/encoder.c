@@ -7,14 +7,14 @@
 
  #include "encoder.h"
 
- uint8_t enc_value;
+ int8_t enc_value;
 
  void enc_init()
  {
 	 ENC_PORT |= ENC_PIN_B;
 	 ENC_PORT |= ENC_PIN_A;
 
-	 GICR |= (1 << INT0); //Enable INT0
+	 GICR |= ENC_INTERRUPT;
 	 MCUCR |= (1 << ISC00);
 
 	 sei();

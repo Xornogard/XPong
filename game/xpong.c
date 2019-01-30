@@ -77,7 +77,20 @@ void game_update()
 		}*/
 	}
 
-	left_player_paddle.position = enc_value;
+	int8_t paddle_position = enc_value;
+
+	if(paddle_position+PADDLE_SIZE > SCREEN_HEIGHT)
+	{
+		paddle_position = SCREEN_HEIGHT - PADDLE_SIZE;
+		enc_value = paddle_position;
+	}
+	else if(paddle_position < 0)
+	{
+		paddle_position = 0;
+		enc_value = 0;
+	}
+
+	left_player_paddle.position = paddle_position;
 
 	if(ball.pos_y <= 2 || ball.pos_y >= 62)
 	{

@@ -54,7 +54,7 @@ uint8_t screen_data[SCREEN_WIDTH][SCREEN_HEIGHT/BITS_IN_BYTE];
 	data_port = command;
 
 	controller_port &= ~E;
-	_delay_us(E_FALL_TIME+DATA_WRITE_TIME);
+	_delay_us(E_FALL_TIME);
  }
 
  void glcd_clear()
