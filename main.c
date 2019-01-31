@@ -16,12 +16,11 @@ int main(void)
 
 	game_init();
 
-
     while (1) 
     {
 		game_loop();
 		
-		if(ball_reflected)
+		if(is_ball_reflected)
 		{
 			BUZZER_PORT &= ~BUZZER;
 		}

@@ -35,8 +35,11 @@
 
 #define BALL_START_POSITION_X SCREEN_WIDTH/2
 #define BALL_START_POSITION_Y SCREEN_HEIGHT/2
- 
+
 #define PADDLE_START_POSITION (SCREEN_HEIGHT/2) - (PADDLE_SIZE/2)
+
+#define LEFT_PLAYER_CONNECT_PIN (1 << PD7)
+#define RIGHT_PLAYER_CONNECT_PIN (1 << PD6)
 
 //////////////////////////////////////////////////////////////////////////
 ///		STRUCTURES
@@ -65,13 +68,17 @@ extern struct Ball ball;
 extern struct Paddle left_player_paddle;
 extern struct Paddle right_player_paddle;
 
-extern uint8_t ball_reflected;
+extern uint8_t is_ball_reflected;
+extern uint8_t is_left_player_connected;
+extern uint8_t is_right_player_connected;
 
 //////////////////////////////////////////////////////////////////////////
 ///		PROCEDURES
 //////////////////////////////////////////////////////////////////////////
 
 void game_init();
+void game_detect_controllers();
+
 void game_reset();
 void game_clear_ball();
 void game_clear_paddles();
@@ -86,7 +93,11 @@ void game_draw_paddles();
 void game_draw_static_graphic();
 void game_draw_borders();
 
+void game_get_left_player_movement();
+void game_get_right_player_movement();
+
 void game_move_right_paddle();
+void game_move_left_paddle();
 
 uint8_t game_is_ball_in_paddle(uint8_t paddle_position);
 int8_t game_get_ball_vertical_speed(uint8_t paddle_position);

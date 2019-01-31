@@ -17,7 +17,9 @@ struct Ball ball;
 struct Paddle left_player_paddle;
 struct Paddle right_player_paddle;
 
-uint8_t ball_reflected;
+uint8_t is_ball_reflected = 0;
+uint8_t is_left_player_connected = 0;
+uint8_t is_right_player_connected = 0;
 
 //////////////////////////////////////////////////////////////////////////
 ///		PROCEDURES
@@ -30,7 +32,22 @@ void game_init()
 	game_draw_static_graphic();
 
 	enc_init();
-	enc_value = PADDLE_START_POSITION;
+	game_detect_controllers();
+	enc_1_value = PADDLE_START_POSITION;
+	enc_2_value = PADDLE_START_POSITION;
+}
+
+void game_detect_controllers()
+{
+	if((PIND & RIGHT_PLAYER_CONNECT_PIN) == 0)
+	{
+		is_right_player_connected = 1;
+	}
+
+	if((PIND & LEFT_PLAYER_CONNECT_PIN) == 0)
+	{
+		is_left_player_connected = 1;
+	}
 }
 
 void game_reset()
@@ -47,7 +64,7 @@ void game_reset()
 
 void game_loop()
 {
-	ball_reflected = 0;
+	is_ball_reflected = 0;
 	game_clear_ball();
 	game_clear_paddles();
 	game_update();
@@ -69,7 +86,7 @@ void game_update()
 		{
 			ball.speed_y = game_get_ball_vertical_speed(left_player_paddle.position);
 			ball.speed_x = game_get_ball_reflected_horizontal_speed();
-			ball_reflected = 1;
+			is_ball_reflected = 1;
 		} 
 	}
 	else if(ball.pos_x >= RIGHT_TABLE_HALF - PADDLE_WIDTH)
@@ -83,29 +100,12 @@ void game_update()
 		{
 			ball.speed_y = game_get_ball_vertical_speed(right_player_paddle.position);
 			ball.speed_x = game_get_ball_reflected_horizontal_speed();
-			ball_reflected = 1;
+			is_ball_reflected = 1;
 		}
 	}
 
-	if(ball.pos_x > GAME_CENTER)
-	{
-		game_move_right_paddle();
-	}
-
-	int8_t paddle_position = enc_value;
-
-	if(paddle_position+PADDLE_SIZE > SCREEN_HEIGHT)
-	{
-		paddle_position = SCREEN_HEIGHT - PADDLE_SIZE;
-		enc_value = paddle_position;
-	}
-	else if(paddle_position < 0)
-	{
-		paddle_position = 0;
-		enc_value = 0;
-	}
-
-	left_player_paddle.position = paddle_position;
+	game_get_left_player_movement();
+	game_get_right_player_movement();
 		
 	if(ball.pos_x + ball.speed_x < LEFT_TABLE_HALF)
 	{
@@ -124,17 +124,67 @@ void game_update()
 	{
 		ball.pos_y = 0;
 		ball.speed_y = -ball.speed_y;
-		ball_reflected = 1;
+		is_ball_reflected = 1;
 	}
 	else if(ball.pos_y + ball.speed_y > SCREEN_HEIGHT-BALL_SIZE)
 	{
 		ball.pos_y = SCREEN_HEIGHT-BALL_SIZE;
 		ball.speed_y = -ball.speed_y;
-		ball_reflected = 1;
+		is_ball_reflected = 1;
 	}
 	else
 	{
 		ball.pos_y += ball.speed_y;
+	}
+}
+
+void game_get_left_player_movement()
+{
+	if(ball.pos_x < GAME_CENTER && !is_left_player_connected)
+	{
+		game_move_left_paddle();
+	}
+	else if(is_left_player_connected)
+	{
+		int8_t paddle_position = enc_1_value;
+
+		if(paddle_position+PADDLE_SIZE > SCREEN_HEIGHT)
+		{
+			paddle_position = SCREEN_HEIGHT - PADDLE_SIZE;
+			enc_1_value = paddle_position;
+		}
+		else if(paddle_position < 0)
+		{
+			paddle_position = 0;
+			enc_1_value = 0;
+		}
+
+		left_player_paddle.position = paddle_position;
+	}
+}
+
+void game_get_right_player_movement()
+{
+	if(ball.pos_x > GAME_CENTER && !is_right_player_connected)
+	{
+		game_move_right_paddle();
+	}
+	else if(is_right_player_connected)
+	{
+		int8_t paddle_position = enc_2_value;
+
+		if(paddle_position+PADDLE_SIZE > SCREEN_HEIGHT)
+		{
+			paddle_position = SCREEN_HEIGHT - PADDLE_SIZE;
+			enc_2_value = paddle_position;
+		}
+		else if(paddle_position < 0)
+		{
+			paddle_position = 0;
+			enc_2_value = 0;
+		}
+
+		right_player_paddle.position = paddle_position;
 	}
 }
 
@@ -265,6 +315,12 @@ void game_move_right_paddle()
 {
 	int8_t target_position = ball.pos_y - PADDLE_SIZE/2;
 
+	static int8_t offset = 3;
+
+	offset = -offset;
+
+	target_position += offset;
+
 	if(target_position+PADDLE_SIZE > SCREEN_HEIGHT)
 	{
 		target_position = SCREEN_HEIGHT - PADDLE_SIZE;
@@ -283,6 +339,37 @@ void game_move_right_paddle()
 	else if(difference < 0)
 	{
 		right_player_paddle.position -= difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
+	}
+}
+
+void game_move_left_paddle()
+{
+	int8_t target_position = ball.pos_y - PADDLE_SIZE/2;
+
+	static int8_t offset = 2;
+
+	offset = -offset;
+
+	target_position+= offset;
+
+	if(target_position+PADDLE_SIZE > SCREEN_HEIGHT)
+	{
+		target_position = SCREEN_HEIGHT - PADDLE_SIZE;
+	}
+	else if(target_position < 0)
+	{
+		target_position = 0;
+	}
+
+	int8_t difference = target_position - left_player_paddle.position;
+
+	if(difference > 0)
+	{
+		left_player_paddle.position += difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
+	}
+	else if(difference < 0)
+	{
+		left_player_paddle.position -= difference > PADDLE_SIZE*2 ? PADDLE_SIZE : difference > PADDLE_SIZE ? PADDLE_SIZE/2 : PADDLE_SIZE/4;
 	}
 }
 
