@@ -288,7 +288,23 @@ void game_draw_borders()
 {
 	for (uint8_t i=0; i<TABLE_HEIGHT; i++)
 	{
+		for(uint8_t j=i%2; j<LEFT_TABLE_HALF-2; j += 2)
+		{
+			glcd_set_pixel(j, i);
+		}
+	}
+
+	for (uint8_t i=0; i<TABLE_HEIGHT; i++)
+	{
 		glcd_set_pixel(LEFT_TABLE_HALF-2, i);
 		glcd_set_pixel(RIGHT_TABLE_HALF+2, i);
+	}
+
+	for (uint8_t i=0; i<TABLE_HEIGHT; i++)
+	{
+		for(uint8_t j=i%2; j<LEFT_TABLE_HALF-2; j += 2)
+		{
+			glcd_set_pixel(j+RIGHT_TABLE_HALF+2, i);
+		}
 	}
 }
