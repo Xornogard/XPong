@@ -10,3 +10,5 @@ glcd\glcd.c
 
 main.c
 
+ssd\ssdisplay.c
+

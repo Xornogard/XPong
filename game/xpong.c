@@ -27,7 +27,7 @@ uint8_t is_right_player_connected = 0;
 
 void game_init() 
 {
-	game_reset(BALL_START_SPEED_X);
+	game_reset();
 	glcd_init();
 	game_draw_static_graphic();
 
@@ -35,6 +35,8 @@ void game_init()
 	game_detect_controllers();
 	enc_1_value = PADDLE_START_POSITION;
 	enc_2_value = PADDLE_START_POSITION;
+
+	ssdisplay_init();
 }
 
 void game_detect_controllers()
@@ -58,8 +60,22 @@ void game_reset()
 	ball.speed_x = BALL_START_SPEED_X;
 	ball.speed_y = BALL_START_SPEED_Y;
 
+	enc_1_value = PADDLE_START_POSITION;
+	enc_2_value = PADDLE_START_POSITION;
+
 	left_player_paddle.position = PADDLE_START_POSITION;
 	right_player_paddle.position = PADDLE_START_POSITION;
+
+	ssdisplay_set_left_number(left_player_paddle.score);
+	ssdisplay_set_right_number(right_player_paddle.score);
+}
+
+void game_total_reset()
+{
+	left_player_paddle.score = 0;
+	right_player_paddle.score = 0;
+
+	game_reset();
 }
 
 void game_loop()
@@ -79,8 +95,16 @@ void game_update()
 		if(ball.pos_x <= LEFT_TABLE_HALF)
 		{
 			right_player_paddle.score++;
-			game_reset();
-			ball.speed_x = -BALL_START_SPEED_X;
+
+			if(right_player_paddle.score >= SCORE_FOR_TOTAL_RESET)
+			{
+				game_total_reset();
+			}
+			else
+			{
+				game_reset();
+				ball.speed_x = -BALL_START_SPEED_X;
+			}
 		}
 		else if(game_is_ball_in_paddle(left_player_paddle.position))
 		{
@@ -94,7 +118,16 @@ void game_update()
 		if(ball.pos_x >= RIGHT_TABLE_HALF)
 		{
 			left_player_paddle.score++;
-			game_reset();
+
+			if(left_player_paddle.score >= SCORE_FOR_TOTAL_RESET)
+			{
+				game_total_reset();
+			}
+			else
+			{
+				game_reset();
+
+			}
 		}
 		else if(game_is_ball_in_paddle(right_player_paddle.position))
 		{

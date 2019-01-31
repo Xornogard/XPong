@@ -11,10 +11,14 @@
 
 #include "../glcd/glcd.h"
 #include "../encoder/encoder.h"
+#include "../ssd/ssdisplay.h"
 
 //////////////////////////////////////////////////////////////////////////
 ///		GAME CONFIGURATION
 //////////////////////////////////////////////////////////////////////////
+
+#define LEFT_PLAYER_CONNECT_PIN (1 << PD7)
+#define RIGHT_PLAYER_CONNECT_PIN (1 << PD6)
 
 #define GAME_CENTER 64
 #define TABLE_WIDTH 64
@@ -38,8 +42,7 @@
 
 #define PADDLE_START_POSITION (SCREEN_HEIGHT/2) - (PADDLE_SIZE/2)
 
-#define LEFT_PLAYER_CONNECT_PIN (1 << PD7)
-#define RIGHT_PLAYER_CONNECT_PIN (1 << PD6)
+#define SCORE_FOR_TOTAL_RESET 10
 
 //////////////////////////////////////////////////////////////////////////
 ///		STRUCTURES
@@ -79,6 +82,7 @@ extern uint8_t is_right_player_connected;
 void game_init();
 void game_detect_controllers();
 
+void game_total_reset();
 void game_reset();
 void game_clear_ball();
 void game_clear_paddles();

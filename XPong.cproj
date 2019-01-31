@@ -147,12 +147,19 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ssd\ssdisplay.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ssd\ssdisplay.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="glcd" />
     <Folder Include="game" />
     <Folder Include="graphics" />
     <Folder Include="encoder" />
+    <Folder Include="ssd" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
