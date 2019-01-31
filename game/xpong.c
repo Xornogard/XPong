@@ -17,6 +17,8 @@ struct Ball ball;
 struct Paddle left_player_paddle;
 struct Paddle right_player_paddle;
 
+uint8_t ball_reflected;
+
 //////////////////////////////////////////////////////////////////////////
 ///		PROCEDURES
 //////////////////////////////////////////////////////////////////////////
@@ -45,6 +47,7 @@ void game_reset()
 
 void game_loop()
 {
+	ball_reflected = 0;
 	game_clear_ball();
 	game_clear_paddles();
 	game_update();
@@ -66,6 +69,7 @@ void game_update()
 		{
 			ball.speed_y = game_get_ball_vertical_speed(left_player_paddle.position);
 			ball.speed_x = game_get_ball_reflected_horizontal_speed();
+			ball_reflected = 1;
 		} 
 	}
 	else if(ball.pos_x >= RIGHT_TABLE_HALF - PADDLE_WIDTH)
@@ -79,6 +83,7 @@ void game_update()
 		{
 			ball.speed_y = game_get_ball_vertical_speed(right_player_paddle.position);
 			ball.speed_x = game_get_ball_reflected_horizontal_speed();
+			ball_reflected = 1;
 		}
 	}
 
@@ -119,11 +124,13 @@ void game_update()
 	{
 		ball.pos_y = 0;
 		ball.speed_y = -ball.speed_y;
+		ball_reflected = 1;
 	}
 	else if(ball.pos_y + ball.speed_y > SCREEN_HEIGHT-BALL_SIZE)
 	{
 		ball.pos_y = SCREEN_HEIGHT-BALL_SIZE;
 		ball.speed_y = -ball.speed_y;
+		ball_reflected = 1;
 	}
 	else
 	{

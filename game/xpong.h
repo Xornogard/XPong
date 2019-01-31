@@ -16,7 +16,6 @@
 ///		GAME CONFIGURATION
 //////////////////////////////////////////////////////////////////////////
 
-
 #define GAME_CENTER 64
 #define TABLE_WIDTH 64
 #define TABLE_HEIGHT 64
@@ -65,6 +64,8 @@ extern struct Ball ball;
 
 extern struct Paddle left_player_paddle;
 extern struct Paddle right_player_paddle;
+
+extern uint8_t ball_reflected;
 
 //////////////////////////////////////////////////////////////////////////
 ///		PROCEDURES
